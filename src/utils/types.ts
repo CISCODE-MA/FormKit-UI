@@ -5,7 +5,17 @@
 /**
  * Possible field value types
  */
-export type FieldValue = string | number | boolean | null | undefined | File | File[];
+export type FieldValue =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | File
+  | File[]
+  | string[]
+  | number[]
+  | FieldValue[];
 
 /**
  * HTML input types supported by FormKit
