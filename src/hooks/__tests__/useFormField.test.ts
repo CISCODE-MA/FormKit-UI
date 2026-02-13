@@ -81,7 +81,7 @@ describe('useFormField', () => {
       const { result } = renderHook(() => useFormField());
 
       const event = {
-        target: { value: 'new text', type: 'text' },
+        target: { value: 'new text', type: 'text', tagName: 'INPUT' },
       } as React.ChangeEvent<HTMLInputElement>;
 
       act(() => {
@@ -95,7 +95,7 @@ describe('useFormField', () => {
       const { result } = renderHook(() => useFormField());
 
       const event = {
-        target: { checked: true, type: 'checkbox' },
+        target: { checked: true, type: 'checkbox', tagName: 'INPUT' },
       } as React.ChangeEvent<HTMLInputElement>;
 
       act(() => {
@@ -109,7 +109,7 @@ describe('useFormField', () => {
       const { result } = renderHook(() => useFormField());
 
       const event = {
-        target: { value: '42', type: 'number' },
+        target: { value: '42', type: 'number', tagName: 'INPUT' },
       } as React.ChangeEvent<HTMLInputElement>;
 
       act(() => {
@@ -123,7 +123,7 @@ describe('useFormField', () => {
       const { result } = renderHook(() => useFormField());
 
       const event = {
-        target: { value: '', type: 'number' },
+        target: { value: '', type: 'number', tagName: 'INPUT' },
       } as React.ChangeEvent<HTMLInputElement>;
 
       act(() => {
@@ -137,7 +137,7 @@ describe('useFormField', () => {
       const { result } = renderHook(() => useFormField());
 
       const event = {
-        target: { value: 'textarea text' },
+        target: { value: 'textarea text', tagName: 'TEXTAREA' },
       } as React.ChangeEvent<HTMLTextAreaElement>;
 
       act(() => {
@@ -151,7 +151,7 @@ describe('useFormField', () => {
       const { result } = renderHook(() => useFormField());
 
       const event = {
-        target: { value: 'option1' },
+        target: { value: 'option1', tagName: 'SELECT' },
       } as React.ChangeEvent<HTMLSelectElement>;
 
       act(() => {

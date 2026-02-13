@@ -113,21 +113,25 @@ export function useFormField(options: UseFormFieldOptions = {}): UseFormFieldRet
         return;
       }
 
-      const target = event.target as HTMLInputElement & HTMLTextAreaElement & HTMLSelectElement;
+      const target = event.target;
       let newValue: FieldValue;
 
-      // Check if it's an input element by the presence of 'type' property
-      if ('type' in target) {
-        if (target.type === 'checkbox') {
-          newValue = target.checked;
-        } else if (target.type === 'number') {
-          newValue = target.value === '' ? '' : Number(target.value);
-        } else if (target.type === 'file') {
-          newValue = target.multiple ? Array.from(target.files || []) : target.files?.[0] || null;
+      // Handle HTMLInputElement
+      if (target.tagName === 'INPUT') {
+        const inputTarget = target as HTMLInputElement;
+        if (inputTarget.type === 'checkbox') {
+          newValue = inputTarget.checked;
+        } else if (inputTarget.type === 'number') {
+          newValue = inputTarget.value === '' ? '' : Number(inputTarget.value);
+        } else if (inputTarget.type === 'file') {
+          newValue = inputTarget.multiple
+            ? Array.from(inputTarget.files || [])
+            : inputTarget.files?.[0] || null;
         } else {
-          newValue = target.value;
+          newValue = inputTarget.value;
         }
       } else {
+        // Handle textarea and select
         newValue = target.value;
       }
 
