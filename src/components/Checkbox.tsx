@@ -175,14 +175,14 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     const checked = value as boolean;
 
     return (
-      <div className={`formkit-checkbox-container ${className}`}>
+      <div className={`formkit-checkbox-container ${className} mb-4`}>
         {label && (
-          <div className="formkit-checkbox-group-label">
+          <div className="block text-sm font-medium text-gray-700 mb-1">
             {label}
-            {required && <span className="formkit-checkbox-required"> *</span>}
+            {required && <span className="text-red-500"> *</span>}
           </div>
         )}
-        <div className={`formkit-checkbox-wrapper ${checkboxClassName}`}>
+        <div className={`formkit-checkbox-wrapper ${checkboxClassName} flex items-center gap-2`}>
           <input
             ref={setRefs}
             type="checkbox"
@@ -195,9 +195,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             required={required}
             disabled={disabled}
             readOnly={readOnly}
-            className={`formkit-checkbox ${hasError ? 'formkit-checkbox-error' : ''} ${
-              isTouched && isValid ? 'formkit-checkbox-valid' : ''
-            }`}
+            className={`formkit-checkbox h-4 w-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${hasError ? 'border-red-500' : ''} ${isTouched && isValid ? 'border-green-500' : ''}`}
             aria-invalid={hasError}
             aria-describedby={
               [hasError ? errorId : undefined, showHint ? hintId : undefined]
@@ -206,18 +204,18 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             }
           />
           {checkboxLabel && (
-            <label htmlFor={fieldId} className="formkit-checkbox-label">
+            <label htmlFor={fieldId} className="text-sm text-gray-700">
               {checkboxLabel}
             </label>
           )}
         </div>
         {showHint && (
-          <div id={hintId} className="formkit-checkbox-hint">
+          <div id={hintId} className="text-xs text-gray-500 mt-1">
             {hint}
           </div>
         )}
         {showError && hasError && (
-          <div id={errorId} className="formkit-checkbox-error-message" role="alert">
+          <div id={errorId} className="text-xs text-red-600 mt-1" role="alert">
             {error}
           </div>
         )}

@@ -186,11 +186,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const isOverLimit = maxLength !== undefined && charCount > maxLength;
 
     return (
-      <div className={`formkit-textarea-container ${className}`}>
+      <div className={`formkit-textarea-container ${className} mb-4`}>
         {label && (
-          <label htmlFor={fieldId} className="formkit-textarea-label">
+          <label htmlFor={fieldId} className="block text-sm font-medium text-gray-700 mb-1">
             {label}
-            {required && <span className="formkit-textarea-required"> *</span>}
+            {required && <span className="text-red-500"> *</span>}
           </label>
         )}
         <textarea
@@ -208,9 +208,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           rows={rows}
           cols={cols}
           maxLength={maxLength}
-          className={`formkit-textarea ${textareaClassName} ${hasError ? 'formkit-textarea-error' : ''} ${
-            isTouched && isValid ? 'formkit-textarea-valid' : ''
-          } ${autoResize ? 'formkit-textarea-auto-resize' : ''}`}
+          className={`formkit-textarea ${textareaClassName} w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${hasError ? 'border-red-500' : ''} ${isTouched && isValid ? 'border-green-500' : ''} ${autoResize ? 'resize-none' : ''}`}
           aria-invalid={hasError}
           aria-describedby={
             [
@@ -223,21 +221,21 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           }
         />
         {showHint && (
-          <div id={hintId} className="formkit-textarea-hint">
+          <div id={hintId} className="text-xs text-gray-500 mt-1">
             {hint}
           </div>
         )}
         {showCounter && (
           <div
             id={countId}
-            className={`formkit-textarea-count ${isOverLimit ? 'formkit-textarea-count-over' : ''}`}
+            className={`text-xs text-gray-500 mt-1 ${isOverLimit ? 'text-red-600' : ''}`}
           >
             {charCount}
             {maxLength !== undefined && ` / ${maxLength}`}
           </div>
         )}
         {showError && hasError && (
-          <div id={errorId} className="formkit-textarea-error-message" role="alert">
+          <div id={errorId} className="text-xs text-red-600 mt-1" role="alert">
             {error}
           </div>
         )}

@@ -186,11 +186,11 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       : (value as string | number);
 
     return (
-      <div className={`formkit-select-container ${className}`}>
+      <div className={`formkit-select-container ${className} mb-4`}>
         {label && (
-          <label htmlFor={fieldId} className="formkit-select-label">
+          <label htmlFor={fieldId} className="block text-sm font-medium text-gray-700 mb-1">
             {label}
-            {required && <span className="formkit-select-required"> *</span>}
+            {required && <span className="text-red-500"> *</span>}
           </label>
         )}
         <select
@@ -204,9 +204,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           required={required}
           disabled={disabled}
           multiple={multiple}
-          className={`formkit-select ${selectClassName} ${hasError ? 'formkit-select-error' : ''} ${
-            isTouched && isValid ? 'formkit-select-valid' : ''
-          }`}
+          className={`formkit-select ${selectClassName} w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${hasError ? 'border-red-500' : ''} ${isTouched && isValid ? 'border-green-500' : ''}`}
           aria-invalid={hasError}
           aria-describedby={hasError ? errorId : showHint ? hintId : undefined}
         >
@@ -222,12 +220,12 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ))}
         </select>
         {showHint && (
-          <div id={hintId} className="formkit-select-hint">
+          <div id={hintId} className="text-xs text-gray-500 mt-1">
             {hint}
           </div>
         )}
         {showError && hasError && (
-          <div id={errorId} className="formkit-select-error-message" role="alert">
+          <div id={errorId} className="text-xs text-red-600 mt-1" role="alert">
             {error}
           </div>
         )}

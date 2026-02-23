@@ -55,21 +55,24 @@ export const FormField = ({
   const errorId = fieldId && error ? `${fieldId}-error` : undefined;
 
   return (
-    <div className={`formkit-field ${className} ${hasError ? 'formkit-field-error' : ''}`}>
+    <div className={`formkit-field ${className} ${hasError ? 'formkit-field-error' : ''} mb-4`}>
       {label && (
-        <label htmlFor={fieldId} className={`formkit-field-label ${labelClassName}`}>
+        <label
+          htmlFor={fieldId}
+          className={`block text-sm font-medium text-gray-700 mb-1 ${labelClassName}`}
+        >
           {label}
-          {required && <span className="formkit-field-required"> *</span>}
+          {required && <span className="text-red-500"> *</span>}
         </label>
       )}
       <div className="formkit-field-control">{children}</div>
       {showHint && (
-        <div id={hintId} className={`formkit-field-hint ${hintClassName}`}>
+        <div id={hintId} className={`text-xs text-gray-500 mt-1 ${hintClassName}`}>
           {hint}
         </div>
       )}
       {hasError && (
-        <div id={errorId} className={`formkit-field-error-message ${errorClassName}`} role="alert">
+        <div id={errorId} className={`text-xs text-red-600 mt-1 ${errorClassName}`} role="alert">
           {error}
         </div>
       )}

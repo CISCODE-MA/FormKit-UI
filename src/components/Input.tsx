@@ -157,11 +157,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const showHint = hint && !hasError;
 
     return (
-      <div className={`formkit-input-container ${className}`}>
+      <div className={`formkit-input-container ${className} mb-4`}>
         {label && (
-          <label htmlFor={fieldId} className="formkit-input-label">
+          <label htmlFor={fieldId} className="block text-sm font-medium text-gray-700 mb-1">
             {label}
-            {required && <span className="formkit-input-required"> *</span>}
+            {required && <span className="text-red-500"> *</span>}
           </label>
         )}
         <input
@@ -183,19 +183,21 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           step={step}
           pattern={pattern}
           autoComplete={autoComplete}
-          className={`formkit-input ${inputClassName} ${hasError ? 'formkit-input-error' : ''} ${
-            isTouched && isValid ? 'formkit-input-valid' : ''
-          }`}
+          className={`formkit-input ${inputClassName} w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${hasError ? 'border-red-500' : ''} ${isTouched && isValid ? 'border-green-500' : ''}`}
           aria-invalid={hasError}
-          aria-describedby={hasError ? errorId : showHint ? hintId : undefined}
+          aria-describedby={
+            [hasError ? errorId : undefined, showHint ? hintId : undefined]
+              .filter(Boolean)
+              .join(' ') || undefined
+          }
         />
         {showHint && (
-          <div id={hintId} className="formkit-input-hint">
+          <div id={hintId} className="text-xs text-gray-500 mt-1">
             {hint}
           </div>
         )}
         {showError && hasError && (
-          <div id={errorId} className="formkit-input-error-message" role="alert">
+          <div id={errorId} className="text-xs text-red-600 mt-1" role="alert">
             {error}
           </div>
         )}
