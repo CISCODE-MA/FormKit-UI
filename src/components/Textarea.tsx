@@ -228,7 +228,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         {showCounter && (
           <div
             id={countId}
-            className={`text-xs text-gray-500 mt-1 ${isOverLimit ? 'text-red-600' : ''}`}
+            className={`text-xs text-gray-500 mt-1${isOverLimit ? ' text-red-600 formkit-textarea-count-over' : ''}`}
           >
             {charCount}
             {maxLength !== undefined && ` / ${maxLength}`}
