@@ -56,17 +56,17 @@ export function useFieldError(options: UseFieldErrorOptions = {}): UseFieldError
 
   // Set up auto-dismiss when error changes
   useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
     if (autoDismiss && autoDismiss > 0 && error) {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setErrorState(null);
         setErrorsState([]);
         onErrorChange?.(null);
       }, autoDismiss);
-
-      return () => {
-        clearTimeout(timer);
-      };
     }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [error, autoDismiss, onErrorChange]);
 
   // Set single error
