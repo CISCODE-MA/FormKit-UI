@@ -187,9 +187,14 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     return (
       <div className={`formkit-textarea-container ${className} mb-4`}>
-        {label && (
+        {label ? (
           <label htmlFor={fieldId} className="block text-sm font-medium text-gray-700 mb-1">
             {label}
+            {required && <span className="text-red-500"> *</span>}
+          </label>
+        ) : (
+          <label htmlFor={fieldId} className="sr-only">
+            {name}
             {required && <span className="text-red-500"> *</span>}
           </label>
         )}
@@ -235,7 +240,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           </div>
         )}
         {showError && hasError && (
-          <div id={errorId} className="text-xs text-red-600 mt-1" role="alert">
+          <div id={errorId} className="text-xs text-red-600 mt-1" role="alert" aria-live="polite">
             {error}
           </div>
         )}

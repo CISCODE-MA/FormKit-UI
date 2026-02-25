@@ -187,9 +187,14 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
 
     return (
       <div className={`formkit-select-container ${className} mb-4`}>
-        {label && (
+        {label ? (
           <label htmlFor={fieldId} className="block text-sm font-medium text-gray-700 mb-1">
             {label}
+            {required && <span className="text-red-500"> *</span>}
+          </label>
+        ) : (
+          <label htmlFor={fieldId} className="sr-only">
+            {name}
             {required && <span className="text-red-500"> *</span>}
           </label>
         )}
@@ -225,7 +230,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           </div>
         )}
         {showError && hasError && (
-          <div id={errorId} className="text-xs text-red-600 mt-1" role="alert">
+          <div id={errorId} className="text-xs text-red-600 mt-1" role="alert" aria-live="polite">
             {error}
           </div>
         )}

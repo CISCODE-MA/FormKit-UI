@@ -176,11 +176,16 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 
     return (
       <div className={`formkit-checkbox-container ${className} mb-4`}>
-        {label && (
+        {label ? (
           <div className="block text-sm font-medium text-gray-700 mb-1">
             {label}
             {required && <span className="text-red-500"> *</span>}
           </div>
+        ) : (
+          <label htmlFor={fieldId} className="sr-only">
+            {name}
+            {required && <span className="text-red-500"> *</span>}
+          </label>
         )}
         <div className={`formkit-checkbox-wrapper ${checkboxClassName} flex items-center gap-2`}>
           <input
@@ -215,7 +220,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           </div>
         )}
         {showError && hasError && (
-          <div id={errorId} className="text-xs text-red-600 mt-1" role="alert">
+          <div id={errorId} className="text-xs text-red-600 mt-1" role="alert" aria-live="polite">
             {error}
           </div>
         )}
