@@ -209,7 +209,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           required={required}
           disabled={disabled}
           multiple={multiple}
-          className={`formkit-select ${selectClassName} w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${hasError ? 'formkit-select-error border-red-500' : ''} ${isTouched && isValid ? 'border-green-500' : ''}`}
+          className={`formkit-select ${selectClassName} w-full px-3 py-2 sm:px-4 sm:py-2.5 text-sm sm:text-base border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${hasError ? 'formkit-select-error border-red-500' : ''} ${isTouched && isValid ? 'border-green-500' : ''}`}
           aria-invalid={hasError}
           aria-describedby={hasError ? errorId : showHint ? hintId : undefined}
         >

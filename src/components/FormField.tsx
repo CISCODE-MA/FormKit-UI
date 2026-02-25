@@ -55,11 +55,13 @@ export const FormField = ({
   const errorId = fieldId && error ? `${fieldId}-error` : undefined;
 
   return (
-    <div className={`formkit-field ${className} ${hasError ? 'formkit-field-error' : ''} mb-4`}>
+    <div
+      className={`formkit-field ${className} ${hasError ? 'formkit-field-error' : ''} mb-4 px-1 sm:px-0`}
+    >
       {label && (
         <label
           htmlFor={fieldId}
-          className={`block text-sm font-medium text-gray-700 mb-1 ${labelClassName}`}
+          className={`block text-sm sm:text-base font-medium text-gray-700 mb-1 ${labelClassName}`}
         >
           {label}
           {required && <span className="text-red-500"> *</span>}

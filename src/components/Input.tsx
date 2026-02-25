@@ -188,7 +188,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           step={step}
           pattern={pattern}
           autoComplete={autoComplete}
-          className={`formkit-input ${inputClassName} w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${hasError ? 'formkit-input-error border-red-500' : ''} ${isTouched && isValid ? 'border-green-500' : ''}`}
+          className={`formkit-input ${inputClassName} w-full px-3 py-2 sm:px-4 sm:py-2.5 text-sm sm:text-base border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${hasError ? 'formkit-input-error border-red-500' : ''} ${isTouched && isValid ? 'border-green-500' : ''}`}
           aria-invalid={hasError}
           aria-describedby={
             [hasError ? errorId : undefined, showHint ? hintId : undefined]
