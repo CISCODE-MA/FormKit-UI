@@ -200,7 +200,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             required={required}
             disabled={disabled}
             readOnly={readOnly}
-            className={`formkit-checkbox h-4 w-4 sm:h-5 sm:w-5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${hasError ? 'formkit-checkbox-error border-red-500' : ''} ${isTouched && isValid ? 'border-green-500' : ''}`}
+            className={`formkit-checkbox h-4 w-4 sm:h-5 sm:w-5 border border-gray-300 rounded transition-all duration-150 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:hover:border-gray-300 ${hasError ? 'formkit-checkbox-error border-red-500 focus:ring-red-500 hover:border-red-400' : ''} ${isTouched && isValid ? 'border-green-500 focus:ring-green-500 hover:border-green-400' : ''}`}
             aria-invalid={hasError}
             aria-describedby={
               [hasError ? errorId : undefined, showHint ? hintId : undefined]
