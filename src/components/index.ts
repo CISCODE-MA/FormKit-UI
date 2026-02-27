@@ -1,5 +1,6 @@
 export * from './Form';
 export * from './Input';
+export * from './PasswordInput';
 export * from './Textarea';
 export * from './Select';
 export * from './Checkbox';
