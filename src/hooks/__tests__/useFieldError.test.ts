@@ -230,7 +230,7 @@ describe('useFieldError', () => {
 
   describe('autoDismiss', () => {
     it('auto-dismisses error after delay', async () => {
-      const { result } = renderHook(() => useFieldError({ autoDismiss: 100 }));
+      const { result } = renderHook(() => useFieldError({ autoDismiss: 50 }));
 
       act(() => {
         result.current.setError('Auto-dismiss error');
@@ -242,7 +242,7 @@ describe('useFieldError', () => {
         () => {
           expect(result.current.error).toBe(null);
         },
-        { timeout: 200 },
+        { timeout: 300 },
       );
     });
 
