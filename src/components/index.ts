@@ -3,6 +3,7 @@ export * from './Input';
 export * from './PasswordInput';
 export * from './NumberInput';
 export * from './DatePicker';
+export * from './PhoneInput';
 export * from './Textarea';
 export * from './Select';
 export * from './Checkbox';
