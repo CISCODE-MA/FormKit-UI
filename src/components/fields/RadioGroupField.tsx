@@ -53,7 +53,12 @@ export function RadioGroupField({ config }: Props): JSX.Element {
         </p>
       )}
 
-      <div className="flex flex-col gap-2" role="radiogroup" aria-invalid={showError}>
+      <div
+        className="flex flex-col gap-2"
+        role="radiogroup"
+        aria-invalid={showError}
+        aria-required={config.required}
+      >
         {config.options?.map((option) => {
           const optionId = `${fieldId}-${option.value}`;
           const isChecked = value === option.value;
@@ -67,7 +72,6 @@ export function RadioGroupField({ config }: Props): JSX.Element {
                 value={String(option.value)}
                 checked={isChecked}
                 disabled={isDisabled || option.disabled}
-                aria-required={config.required}
                 onChange={(e) => setValue(config.key, e.target.value)}
                 onBlur={() => setTouched(config.key, true)}
                 className={`

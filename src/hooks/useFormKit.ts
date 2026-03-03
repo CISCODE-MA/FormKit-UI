@@ -5,8 +5,9 @@
 
 import { useState, useCallback, useMemo, useRef } from 'react';
 import type { z } from 'zod';
-import type { FormValues, FieldValue } from '../core/types';
+import type { FormValues, FieldValue, ValidationMode } from '../core/types';
 import type { FieldErrors } from '../core/validator';
+import type { FormContextValue } from '../models/FormState';
 import { mapZodErrors } from '../core/validator';
 
 /**

@@ -1,16 +1,16 @@
-export * from './Form';
-export * from './Input';
-export * from './PasswordInput';
-export * from './NumberInput';
-export * from './DatePicker';
-export * from './PhoneInput';
-export * from './FileInput';
-export * from './ColorPicker';
-export * from './Switch';
-export * from './Textarea';
-export * from './Select';
-export * from './Checkbox';
-export * from './RadioGroup';
-export * from './FormField';
-export * from './ErrorMessage';
-export * from './fieldGenerator';
+/**
+ * Components module - exports all public components
+ * Following CHM architecture: Components handle rendering only
+ */
+
+// Form components
+export * from './form';
+
+// Field components (internal - used by DynamicForm)
+export * from './fields';
+
+// Layout components (internal - used by field components)
+export * from './layout';
+
+// Context (internal use only)
+export { FormKitProvider, useFormKitContext } from './context/FormKitContext';

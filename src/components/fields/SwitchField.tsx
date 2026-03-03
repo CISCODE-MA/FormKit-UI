@@ -22,6 +22,7 @@ export function SwitchField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
 
   const fieldId = `field-${config.key}`;
+  const labelId = `${fieldId}-label`;
   const errorId = `${fieldId}-error`;
   const descId = `${fieldId}-desc`;
 
@@ -48,7 +49,7 @@ export function SwitchField({ config }: Props): JSX.Element {
           type="button"
           role="switch"
           aria-checked={isChecked}
-          aria-label={config.label}
+          aria-labelledby={labelId}
           aria-invalid={showError}
           aria-required={config.required}
           aria-describedby={describedBy}
@@ -76,17 +77,18 @@ export function SwitchField({ config }: Props): JSX.Element {
             `}
           />
         </button>
-        <label
-          htmlFor={fieldId}
+        <span
+          id={labelId}
           className={`
             formkit-switch-label
             text-sm font-medium text-gray-700
             ${isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
           `}
+          onClick={() => !isDisabled && setValue(config.key, !isChecked)}
         >
           {config.label}
           {config.required && <span className="text-red-500 ml-1">*</span>}
-        </label>
+        </span>
       </div>
 
       {config.description && (
