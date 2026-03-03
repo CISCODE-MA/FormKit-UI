@@ -1,0 +1,96 @@
+/**
+ * FieldConfig - Per-field configuration for DynamicForm
+ * Type Layer — contracts only, zero runtime logic
+ */
+
+import type { FieldType, ConditionalRule, FieldValue } from '../core/types';
+
+/**
+ * Option for select, radio, or multi-select fields
+ */
+export interface FieldOption {
+  /** Option value */
+  readonly value: string | number;
+  /** Option display label */
+  readonly label: string;
+  /** Whether option is disabled */
+  readonly disabled?: boolean;
+}
+
+/**
+ * Async validator function signature
+ */
+export type AsyncValidator<TValue = unknown> = (
+  value: TValue,
+  ctx: { signal: AbortSignal },
+) => Promise<string | null>;
+
+/**
+ * Per-field configuration for DynamicForm
+ *
+ * @example
+ * ```typescript
+ * const field: FieldConfig = {
+ *   key: 'email',
+ *   label: 'Email Address',
+ *   type: FieldType.EMAIL,
+ *   required: true,
+ *   placeholder: 'you@example.com',
+ * };
+ * ```
+ */
+export interface FieldConfig<TValue = unknown> {
+  // ── Identity ──────────────────────────────────────────────────
+  /** Unique field key (must match a key in the Zod schema) */
+  readonly key: string;
+  /** Field label displayed to user */
+  readonly label: string;
+  /** Field type determines which component renders */
+  readonly type: FieldType;
+
+  // ── Content ───────────────────────────────────────────────────
+  /** Placeholder text */
+  readonly placeholder?: string;
+  /** Helper text shown below the field */
+  readonly description?: string;
+  /** Options for select, multi-select, or radio fields */
+  readonly options?: FieldOption[];
+
+  // ── State ─────────────────────────────────────────────────────
+  /** Visual required indicator (asterisk) — Zod schema is the real validation gate */
+  readonly required?: boolean;
+  /** Whether field is disabled (can be static or computed from form values) */
+  readonly disabled?: boolean | ((values: Record<string, FieldValue>) => boolean);
+  /** Whether field is read-only */
+  readonly readOnly?: boolean;
+
+  // ── Async validation ──────────────────────────────────────────
+  /** Async validator function (e.g., check email availability) */
+  readonly asyncValidate?: AsyncValidator<TValue>;
+  /** Debounce delay for async validation in ms (default: 300) */
+  readonly asyncDebounceMs?: number;
+
+  // ── Conditional visibility ────────────────────────────────────
+  /** Rule that must be true for field to show */
+  readonly showWhen?: ConditionalRule;
+  /** Rule that when true hides the field */
+  readonly hideWhen?: ConditionalRule;
+
+  // ── Array field (only when type === FieldType.ARRAY) ──────────
+  /** Field configs for each item in the array */
+  readonly arrayFields?: FieldConfig[];
+  /** Label for add button (default: 'Add') */
+  readonly addLabel?: string;
+  /** Label for remove button (default: 'Remove') */
+  readonly removeLabel?: string;
+  /** Minimum number of rows */
+  readonly minRows?: number;
+  /** Maximum number of rows */
+  readonly maxRows?: number;
+
+  // ── Layout ────────────────────────────────────────────────────
+  /** Column span in grid layout */
+  readonly colSpan?: 1 | 2 | 3 | 4;
+  /** Custom CSS class */
+  readonly className?: string;
+}
