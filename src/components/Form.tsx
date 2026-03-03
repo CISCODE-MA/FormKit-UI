@@ -102,3 +102,6 @@ export const Form = forwardRef(FormInner) as <T extends FormValues = FormValues>
 
 // Set display name for debugging
 (Form as React.FC).displayName = 'Form';
+
+// Default export for public API
+export default Form;
