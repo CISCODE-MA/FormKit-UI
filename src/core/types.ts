@@ -5,25 +5,54 @@
 
 /**
  * Field types supported by DynamicForm
+ *
+ * @example
+ * ```typescript
+ * const fields: FieldConfig[] = [
+ *   { key: 'email', label: 'Email', type: FieldType.EMAIL },
+ *   { key: 'role', label: 'Role', type: FieldType.SELECT, options: [...] },
+ * ];
+ * ```
  */
 export enum FieldType {
+  /** Single-line text input */
   TEXT = 'text',
+  /** Email input with validation */
   EMAIL = 'email',
+  /** Password input (masked) */
   PASSWORD = 'password',
+  /** Numeric input */
   NUMBER = 'number',
+  /** Multi-line text area */
   TEXTAREA = 'textarea',
+  /** Dropdown select */
   SELECT = 'select',
+  /** Multi-select with checkboxes */
   MULTI_SELECT = 'multi-select',
+  /** Single checkbox (boolean) */
   CHECKBOX = 'checkbox',
+  /** Radio button group */
   RADIO = 'radio',
+  /** Toggle switch (boolean) */
   SWITCH = 'switch',
+  /** Date picker */
   DATE = 'date',
+  /** File upload */
   FILE = 'file',
+  /** Repeatable field group */
   ARRAY = 'array',
 }
 
 /**
  * Conditional rule operators for showWhen/hideWhen
+ *
+ * - `equals`: Field value equals the specified value
+ * - `not_equals`: Field value does not equal the specified value
+ * - `contains`: Field value contains the specified substring (strings only)
+ * - `is_empty`: Field is empty, null, or undefined
+ * - `is_not_empty`: Field has a non-empty value
+ * - `gt`: Field value is greater than the specified number
+ * - `lt`: Field value is less than the specified number
  */
 export type ConditionalOperator =
   | 'equals'
