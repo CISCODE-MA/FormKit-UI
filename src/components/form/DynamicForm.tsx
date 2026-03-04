@@ -9,9 +9,9 @@ import type { FieldConfig } from '../../models/FieldConfig';
 import type { StepConfig } from '../../models/StepConfig';
 import type { FormValues, ValidationMode, FieldValue } from '../../core/types';
 import type { FieldErrors } from '../../core/validator';
-import { FormKitProvider } from '../context/FormKitContext';
-import { Field } from '../fields/Field';
-import { FormActions } from '../layout/FormActions';
+import FormKitProvider from '../context/FormKitContext';
+import Field from '../fields/Field';
+import FormActions from '../layout/FormActions';
 
 /**
  * Props for DynamicForm component

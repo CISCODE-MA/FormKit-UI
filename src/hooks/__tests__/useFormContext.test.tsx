@@ -5,7 +5,8 @@
 import { describe, it, expect, vi, type Mock } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import type { ReactNode } from 'react';
-import { FormKitProvider, useFormKitContext } from '../../components/context/FormKitContext';
+import FormKitProvider from '../../components/context/FormKitContext';
+import { useFormKitContext } from '../FormKitContext';
 import { useFormContext } from '../useFormContext';
 import type { FormValues, FieldValue } from '../../core/types';
 import type { FormContextValue } from '../../models/FormState';

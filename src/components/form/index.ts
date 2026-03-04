@@ -3,5 +3,5 @@
  */
 
 export { default as DynamicForm, type DynamicFormProps } from './DynamicForm';
-export { DynamicFormStep, type DynamicFormStepProps } from './DynamicFormStep';
-export { FormStepper, type FormStepperProps } from './FormStepper';
+export { default as DynamicFormStep, type DynamicFormStepProps } from './DynamicFormStep';
+export { default as FormStepper, type FormStepperProps } from './FormStepper';

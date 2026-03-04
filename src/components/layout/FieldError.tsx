@@ -20,7 +20,7 @@ type Props = {
  * FieldError component for displaying field validation errors
  * Uses role="alert" for live announcement to screen readers
  */
-export function FieldError({ id, message, className = '' }: Props): JSX.Element | null {
+export default function FieldError({ id, message, className = '' }: Props): JSX.Element | null {
   if (!message) {
     return null;
   }

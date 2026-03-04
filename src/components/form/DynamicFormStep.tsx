@@ -5,7 +5,7 @@
 
 import type { JSX } from 'react';
 import type { StepConfig } from '../../models/StepConfig';
-import { Field } from '../fields/Field';
+import Field from '../fields/Field';
 
 /**
  * Props for DynamicFormStep
@@ -23,7 +23,7 @@ type Props = {
  *
  * @internal
  */
-export function DynamicFormStep({ step, isActive }: Props): JSX.Element {
+export default function DynamicFormStep({ step, isActive }: Props): JSX.Element {
   return (
     <div
       className={`formkit-form-step ${isActive ? 'formkit-form-step-active' : 'formkit-form-step-hidden'}`}

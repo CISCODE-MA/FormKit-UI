@@ -5,7 +5,7 @@
 import type { JSX } from 'react';
 import type { FieldConfig } from '../../models/FieldConfig';
 import { useFormKitContext } from '../context/FormKitContext';
-import { FieldError } from '../layout/FieldError';
+import FieldError from '../layout/FieldError';
 
 /**
  * Props for CheckboxField
@@ -18,7 +18,7 @@ type Props = {
  * CheckboxField component for boolean input
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export function CheckboxField({ config }: Props): JSX.Element {
+export default function CheckboxField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
 
   const fieldId = `field-${config.key}`;

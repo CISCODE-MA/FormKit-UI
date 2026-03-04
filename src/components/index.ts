@@ -13,4 +13,4 @@ export * from './fields';
 export * from './layout';
 
 // Context (internal use only)
-export { FormKitProvider, useFormKitContext } from './context/FormKitContext';
+export { default as FormKitProvider, useFormKitContext } from './context/FormKitContext';

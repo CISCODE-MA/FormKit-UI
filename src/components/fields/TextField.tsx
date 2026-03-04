@@ -6,8 +6,8 @@ import type { JSX } from 'react';
 import type { FieldConfig } from '../../models/FieldConfig';
 import { FieldType } from '../../core/types';
 import { useFormKitContext } from '../context/FormKitContext';
-import { FieldLabel } from '../layout/FieldLabel';
-import { FieldError } from '../layout/FieldError';
+import FieldLabel from '../layout/FieldLabel';
+import FieldError from '../layout/FieldError';
 
 /**
  * Props for TextField
@@ -20,7 +20,7 @@ type Props = {
  * TextField component for text, email, password, and number inputs
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export function TextField({ config }: Props): JSX.Element {
+export default function TextField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
 
   const fieldId = `field-${config.key}`;

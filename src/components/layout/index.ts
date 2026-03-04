@@ -2,7 +2,7 @@
  * Layout components module exports
  */
 
-export { FieldLabel, type FieldLabelProps } from './FieldLabel';
-export { FieldError, type FieldErrorProps } from './FieldError';
-export { FieldGroup, type FieldGroupProps } from './FieldGroup';
-export { FormActions, type FormActionsProps } from './FormActions';
+export { default as FieldLabel, type FieldLabelProps } from './FieldLabel';
+export { default as FieldError, type FieldErrorProps } from './FieldError';
+export { default as FieldGroup, type FieldGroupProps } from './FieldGroup';
+export { default as FormActions, type FormActionsProps } from './FormActions';

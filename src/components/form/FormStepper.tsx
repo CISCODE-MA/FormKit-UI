@@ -24,7 +24,7 @@ type Props = {
  *
  * @internal
  */
-export function FormStepper({ steps, currentStep, onStepClick }: Props): JSX.Element {
+export default function FormStepper({ steps, currentStep, onStepClick }: Props): JSX.Element {
   return (
     <nav className="formkit-stepper" aria-label="Form progress">
       <ol className="flex items-center gap-2" role="list">

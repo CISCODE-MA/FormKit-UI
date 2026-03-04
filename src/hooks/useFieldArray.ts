@@ -4,7 +4,7 @@
 
 import { useCallback, useMemo } from 'react';
 import type { FieldValue } from '../core/types';
-import { useFormKitContext } from '../components/context/FormKitContext';
+import { useFormKitContext } from './FormKitContext';
 
 /**
  * Options for useFieldArray hook

@@ -24,7 +24,7 @@ type Props = {
  * FieldLabel component for form field labels
  * Shows required indicator (asterisk) when needed
  */
-export function FieldLabel({
+export default function FieldLabel({
   label,
   htmlFor,
   required,

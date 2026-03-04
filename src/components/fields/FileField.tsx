@@ -5,8 +5,8 @@
 import type { JSX, ChangeEvent } from 'react';
 import type { FieldConfig } from '../../models/FieldConfig';
 import { useFormKitContext } from '../context/FormKitContext';
-import { FieldLabel } from '../layout/FieldLabel';
-import { FieldError } from '../layout/FieldError';
+import FieldLabel from '../layout/FieldLabel';
+import FieldError from '../layout/FieldError';
 
 /**
  * Props for FileField
@@ -19,7 +19,7 @@ type Props = {
  * FileField component for file uploads
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export function FileField({ config }: Props): JSX.Element {
+export default function FileField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
 
   const fieldId = `field-${config.key}`;

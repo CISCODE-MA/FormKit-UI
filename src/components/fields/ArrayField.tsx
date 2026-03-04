@@ -7,8 +7,8 @@ import { useCallback, useMemo } from 'react';
 import type { FieldConfig } from '../../models/FieldConfig';
 import type { FieldValue } from '../../core/types';
 import { useFormKitContext } from '../context/FormKitContext';
-import { FieldLabel } from '../layout/FieldLabel';
-import { FieldError } from '../layout/FieldError';
+import FieldLabel from '../layout/FieldLabel';
+import FieldError from '../layout/FieldError';
 
 /**
  * Props for ArrayField
@@ -21,7 +21,7 @@ type Props = {
  * ArrayField component for repeatable field groups
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export function ArrayField({ config }: Props): JSX.Element {
+export default function ArrayField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getValues } = useFormKitContext();
 
   const fieldId = `field-${config.key}`;

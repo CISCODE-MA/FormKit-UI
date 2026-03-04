@@ -8,15 +8,15 @@ import type { FieldConfig } from '../../models/FieldConfig';
 import { FieldType } from '../../core/types';
 import { isFieldVisible } from '../../core/conditional';
 import { useFormKitContext } from '../context/FormKitContext';
-import { TextField } from './TextField';
-import { TextareaField } from './TextareaField';
-import { SelectField } from './SelectField';
-import { CheckboxField } from './CheckboxField';
-import { RadioGroupField } from './RadioGroupField';
-import { SwitchField } from './SwitchField';
-import { DateField } from './DateField';
-import { FileField } from './FileField';
-import { ArrayField } from './ArrayField';
+import TextField from './TextField';
+import TextareaField from './TextareaField';
+import SelectField from './SelectField';
+import CheckboxField from './CheckboxField';
+import RadioGroupField from './RadioGroupField';
+import SwitchField from './SwitchField';
+import DateField from './DateField';
+import FileField from './FileField';
+import ArrayField from './ArrayField';
 
 /**
  * Props for Field component
@@ -32,7 +32,7 @@ type Props = {
  *
  * @internal — use DynamicForm, not Field directly
  */
-export function Field({ config }: Props): JSX.Element | null {
+export default function Field({ config }: Props): JSX.Element | null {
   const { getValues } = useFormKitContext();
 
   // Check conditional visibility

@@ -2,4 +2,4 @@
  * Context module exports
  */
 
-export { FormKitContext, FormKitProvider, useFormKitContext } from './FormKitContext';
+export { default as FormKitProvider, FormKitContext, useFormKitContext } from './FormKitContext';

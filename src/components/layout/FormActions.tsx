@@ -28,7 +28,7 @@ type Props = {
  * FormActions component for form submit/reset buttons
  * Handles loading state and wizard navigation
  */
-export function FormActions({
+export default function FormActions({
   submitLabel = 'Submit',
   resetLabel,
   prevLabel,

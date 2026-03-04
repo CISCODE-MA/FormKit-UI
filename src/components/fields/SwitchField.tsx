@@ -5,7 +5,7 @@
 import type { JSX } from 'react';
 import type { FieldConfig } from '../../models/FieldConfig';
 import { useFormKitContext } from '../context/FormKitContext';
-import { FieldError } from '../layout/FieldError';
+import FieldError from '../layout/FieldError';
 
 /**
  * Props for SwitchField
@@ -18,7 +18,7 @@ type Props = {
  * SwitchField component for boolean toggle
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export function SwitchField({ config }: Props): JSX.Element {
+export default function SwitchField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
 
   const fieldId = `field-${config.key}`;

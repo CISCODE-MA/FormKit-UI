@@ -22,7 +22,12 @@ type Props = {
  * FieldGroup component for visually grouping related fields
  * Uses fieldset/legend for proper accessibility
  */
-export function FieldGroup({ title, description, children, className = '' }: Props): JSX.Element {
+export default function FieldGroup({
+  title,
+  description,
+  children,
+  className = '',
+}: Props): JSX.Element {
   return (
     <fieldset
       className={`formkit-field-group border border-gray-200 rounded-lg p-4 ${className}`.trim()}

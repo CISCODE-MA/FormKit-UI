@@ -3,7 +3,7 @@
  * Re-exports useFormKitContext for public API
  */
 
-import { useFormKitContext } from '../components/context/FormKitContext';
+import { useFormKitContext } from './FormKitContext';
 import type { FormContextValue } from '../models/FormState';
 import type { FormValues } from '../core/types';
 
