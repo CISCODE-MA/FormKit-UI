@@ -168,6 +168,12 @@ export default function DynamicForm<TValues extends FormValues = FormValues>({
             }
           }
           setErrors(fieldErrors);
+          // Mark fields with errors as touched so errors display
+          const touchedFields: Partial<Record<keyof TValues, boolean>> = {};
+          Object.keys(fieldErrors).forEach((key) => {
+            touchedFields[key as keyof TValues] = true;
+          });
+          setTouched((prev) => ({ ...prev, ...touchedFields }));
           onError?.(fieldErrors);
           return;
         }

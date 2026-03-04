@@ -174,18 +174,22 @@ export function useFormKit<TValues extends FormValues = FormValues>(
     setValuesState((prev) => ({ ...prev, ...newValues }));
   }, []);
 
-  // Validate entire form
-  const validate = useCallback(async (): Promise<boolean> => {
-    if (!schema) return true;
+  // Validate entire form - returns errors for immediate use
+  const validate = useCallback(async (): Promise<{
+    isValid: boolean;
+    errors: FieldErrors<TValues>;
+  }> => {
+    if (!schema) return { isValid: true, errors: {} };
 
     const result = schema.safeParse(valuesRef.current);
     if (result.success) {
       setErrors({});
-      return true;
+      return { isValid: true, errors: {} };
     }
 
-    setErrors(mapZodErrors<TValues>(result.error));
-    return false;
+    const fieldErrors = mapZodErrors<TValues>(result.error);
+    setErrors(fieldErrors);
+    return { isValid: false, errors: fieldErrors };
   }, [schema]);
 
   // Validate single field
@@ -226,9 +230,15 @@ export function useFormKit<TValues extends FormValues = FormValues>(
         setIsSubmitting(true);
 
         try {
-          const isFormValid = await validate();
-          if (!isFormValid) {
-            onError?.(errors);
+          const { isValid, errors: validationErrors } = await validate();
+          if (!isValid) {
+            // Mark all fields with errors as touched so errors display
+            const touchedFields: Partial<Record<keyof TValues, boolean>> = {};
+            Object.keys(validationErrors).forEach((key) => {
+              touchedFields[key as keyof TValues] = true;
+            });
+            setTouched((prev) => ({ ...prev, ...touchedFields }));
+            onError?.(validationErrors);
             return;
           }
 
@@ -238,7 +248,7 @@ export function useFormKit<TValues extends FormValues = FormValues>(
         }
       };
     },
-    [validate, errors],
+    [validate],
   );
 
   // Context value for FormKitProvider
@@ -267,6 +277,12 @@ export function useFormKit<TValues extends FormValues = FormValues>(
     ],
   );
 
+  // Public validate that returns boolean for backward compatibility
+  const validatePublic = useCallback(async (): Promise<boolean> => {
+    const { isValid } = await validate();
+    return isValid;
+  }, [validate]);
+
   return {
     values,
     errors,
@@ -282,7 +298,7 @@ export function useFormKit<TValues extends FormValues = FormValues>(
     setTouched: setIsTouched,
     getValues,
     setValues,
-    validate,
+    validate: validatePublic,
     validateField,
     reset,
     handleSubmit,

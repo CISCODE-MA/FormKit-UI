@@ -106,8 +106,11 @@ export function useAsyncValidation<TValue = unknown>(
         setIsValidating(false);
       }
     } catch (err) {
-      // Ignore abort errors
-      if (err instanceof Error && err.name === 'AbortError') {
+      // Ignore abort errors (handle both Error instances and DOMException)
+      if (
+        (err instanceof Error && err.name === 'AbortError') ||
+        (err instanceof DOMException && err.name === 'AbortError')
+      ) {
         return;
       }
 
