@@ -9,6 +9,7 @@ import { FieldType } from '../../core/types';
 import { isFieldVisible } from '../../core/conditional';
 import { useFormKitContext } from '../context/FormKitContext';
 import TextField from './TextField';
+import PasswordField from './PasswordField';
 import TextareaField from './TextareaField';
 import SelectField from './SelectField';
 import CheckboxField from './CheckboxField';
@@ -52,9 +53,11 @@ export default function Field({ config }: Props): JSX.Element | null {
     switch (config.type) {
       case FieldType.TEXT:
       case FieldType.EMAIL:
-      case FieldType.PASSWORD:
       case FieldType.NUMBER:
         return <TextField config={config} />;
+
+      case FieldType.PASSWORD:
+        return <PasswordField config={config} />;
 
       case FieldType.TEXTAREA:
         return <TextareaField config={config} />;

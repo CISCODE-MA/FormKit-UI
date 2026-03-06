@@ -4,6 +4,7 @@
 
 export { default as Field, type FieldProps } from './Field';
 export { default as TextField, type TextFieldProps } from './TextField';
+export { default as PasswordField, type PasswordFieldProps } from './PasswordField';
 export { default as TextareaField, type TextareaFieldProps } from './TextareaField';
 export { default as SelectField, type SelectFieldProps } from './SelectField';
 export { default as CheckboxField, type CheckboxFieldProps } from './CheckboxField';
