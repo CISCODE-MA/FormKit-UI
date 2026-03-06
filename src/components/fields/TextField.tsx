@@ -31,7 +31,6 @@ export default function TextField({ config }: Props): JSX.Element {
   const error = getError(config.key);
   const touched = getTouched(config.key);
   const showError = touched && !!error;
-  const showSuccess = touched && !error;
 
   // Map FieldType to input type
   const inputType = (): string => {
@@ -57,8 +56,14 @@ export default function TextField({ config }: Props): JSX.Element {
     undefined;
 
   return (
-    <div className="formkit-text-field flex flex-col gap-1 mb-4">
+    <div className="formkit-text-field flex flex-col gap-1">
       <FieldLabel htmlFor={fieldId} label={config.label} required={config.required} />
+
+      {config.description && (
+        <p id={descId} className="text-sm text-gray-500">
+          {config.description}
+        </p>
+      )}
 
       <input
         id={fieldId}
@@ -79,31 +84,13 @@ export default function TextField({ config }: Props): JSX.Element {
         onBlur={() => setTouched(config.key, true)}
         className={`
           formkit-input
-          w-full px-3 py-2 sm:px-4 sm:py-2.5
-          text-sm sm:text-base
+          w-full px-3 py-2
           border rounded-md
-          transition-all duration-150
-          focus:outline-none focus:ring-2 focus:border-blue-500
-          ${
-            showError
-              ? 'border-red-500 focus:ring-red-500 focus:border-red-500 hover:border-red-400'
-              : showSuccess
-                ? 'border-green-500 focus:ring-green-500 focus:border-green-500 hover:border-green-400'
-                : 'border-gray-300 focus:ring-blue-500 hover:border-gray-400'
-          }
-          ${
-            isDisabled
-              ? 'bg-gray-100 text-gray-500 cursor-not-allowed hover:border-gray-300'
-              : 'bg-white'
-          }
+          focus:outline-none focus:ring-2 focus:ring-blue-500
+          ${showError ? 'border-red-500' : 'border-gray-300'}
+          ${isDisabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
         `}
       />
-
-      {config.description && !showError && (
-        <p id={descId} className="text-xs text-gray-500 mt-1">
-          {config.description}
-        </p>
-      )}
 
       {showError && <FieldError id={errorId} message={error} />}
     </div>

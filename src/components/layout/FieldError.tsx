@@ -29,8 +29,7 @@ export default function FieldError({ id, message, className = '' }: Props): JSX.
     <p
       id={id}
       role="alert"
-      aria-live="polite"
-      className={`formkit-field-error text-xs text-red-600 mt-1 ${className}`.trim()}
+      className={`formkit-field-error text-sm text-red-600 ${className}`.trim()}
     >
       {message}
     </p>

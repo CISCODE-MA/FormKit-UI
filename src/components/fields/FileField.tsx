@@ -60,8 +60,14 @@ export default function FileField({ config }: Props): JSX.Element {
   };
 
   return (
-    <div className="formkit-file-field flex flex-col gap-1 mb-4">
+    <div className="formkit-file-field flex flex-col gap-1">
       <FieldLabel htmlFor={fieldId} label={config.label} required={config.required} />
+
+      {config.description && (
+        <p id={descId} className="text-sm text-gray-500">
+          {config.description}
+        </p>
+      )}
 
       <div className="flex flex-col gap-2">
         <input
@@ -76,41 +82,20 @@ export default function FileField({ config }: Props): JSX.Element {
           onBlur={() => setTouched(config.key, true)}
           className={`
             formkit-file-input
-            w-full px-3 py-2 sm:px-4 sm:py-2.5
-            text-sm sm:text-base
+            w-full px-3 py-2
             border rounded-md
-            transition-all duration-150
             file:mr-4 file:py-2 file:px-4
             file:rounded-md file:border-0
             file:text-sm file:font-medium
-            file:bg-blue-600 file:text-white
-            file:transition-colors file:duration-150
-            hover:file:bg-blue-700
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-            ${
-              showError
-                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                : 'border-gray-300 hover:border-gray-400'
-            }
-            ${
-              isDisabled
-                ? 'bg-gray-100 text-gray-500 cursor-not-allowed file:bg-gray-400 file:cursor-not-allowed'
-                : 'bg-white'
-            }
+            file:bg-blue-50 file:text-blue-700
+            hover:file:bg-blue-100
+            focus:outline-none focus:ring-2 focus:ring-blue-500
+            ${showError ? 'border-red-500' : 'border-gray-300'}
+            ${isDisabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
           `}
         />
-        {value && (
-          <p className="text-xs text-gray-600">
-            <span className="font-medium">Selected:</span> {getFileName()}
-          </p>
-        )}
+        {value && <p className="text-sm text-gray-600">Selected: {getFileName()}</p>}
       </div>
-
-      {config.description && !showError && (
-        <p id={descId} className="text-xs text-gray-500 mt-1">
-          {config.description}
-        </p>
-      )}
 
       {showError && <FieldError id={errorId} message={error} />}
     </div>

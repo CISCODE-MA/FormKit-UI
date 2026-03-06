@@ -47,11 +47,10 @@ export default function FormActions({
           disabled={isSubmitting}
           className={`
             formkit-btn-prev
-            px-5 py-2.5 text-sm font-medium
+            px-4 py-2 text-sm font-medium
             border border-gray-300 rounded-md
             text-gray-700 bg-white
-            transition-all duration-150
-            hover:bg-gray-50 hover:border-gray-400
+            hover:bg-gray-50
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
             ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}
           `}
@@ -71,11 +70,10 @@ export default function FormActions({
           disabled={isSubmitting}
           className={`
             formkit-btn-reset
-            px-5 py-2.5 text-sm font-medium
+            px-4 py-2 text-sm font-medium
             border border-gray-300 rounded-md
             text-gray-700 bg-white
-            transition-all duration-150
-            hover:bg-gray-50 hover:border-gray-400
+            hover:bg-gray-50
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
             ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}
           `}
@@ -90,10 +88,9 @@ export default function FormActions({
         disabled={isSubmitting}
         className={`
           formkit-btn-submit
-          px-6 py-2.5 text-sm font-medium
+          px-4 py-2 text-sm font-medium
           border border-transparent rounded-md
           text-white bg-blue-600
-          transition-all duration-150
           hover:bg-blue-700
           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
           ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}

@@ -42,19 +42,19 @@ export default function RadioGroupField({ config }: Props): JSX.Element {
 
   return (
     <fieldset
-      className="formkit-radio-group-field flex flex-col gap-2 mb-4"
+      className="formkit-radio-group-field flex flex-col gap-2"
       aria-describedby={describedBy}
     >
       <FieldLabel as="legend" label={config.label} required={config.required} />
 
       {config.description && (
-        <p id={descId} className="text-xs text-gray-500">
+        <p id={descId} className="text-sm text-gray-500">
           {config.description}
         </p>
       )}
 
       <div
-        className="flex flex-col gap-3 mt-1"
+        className="flex flex-col gap-2"
         role="radiogroup"
         aria-invalid={showError}
         aria-required={config.required}
@@ -64,7 +64,7 @@ export default function RadioGroupField({ config }: Props): JSX.Element {
           const isChecked = value === option.value;
 
           return (
-            <div key={String(option.value)} className="flex items-center gap-3">
+            <div key={String(option.value)} className="flex items-center gap-2">
               <input
                 id={optionId}
                 name={config.key}
@@ -76,13 +76,10 @@ export default function RadioGroupField({ config }: Props): JSX.Element {
                 onBlur={() => setTouched(config.key, true)}
                 className={`
                   formkit-radio
-                  h-5 w-5
-                  border-2 border-gray-300
+                  h-4 w-4
+                  border-gray-300
                   text-blue-600
-                  transition-all duration-150
-                  focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                  hover:border-gray-400
-                  ${showError ? 'border-red-500' : ''}
+                  focus:ring-2 focus:ring-blue-500
                   ${isDisabled || option.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
                 `}
               />

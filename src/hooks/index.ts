@@ -1,5 +1,28 @@
-export * from './useForm';
-export * from './FormContext';
-export * from './useFormField';
-export * from './useValidation';
-export * from './useFieldError';
+/**
+ * Hooks module - all form state and logic hooks
+ * Following CHM architecture: Hooks handle state and side effects
+ */
+
+// Master form state hook
+export { useFormKit, type UseFormKitOptions, type UseFormKitReturn } from './useFormKit';
+
+// Context access hook
+export { useFormContext } from './useFormContext';
+
+// Field array management
+export {
+  useFieldArray,
+  type UseFieldArrayOptions,
+  type UseFieldArrayReturn,
+} from './useFieldArray';
+
+// Multi-step form navigation
+export { useFormStep, type UseFormStepOptions, type UseFormStepReturn } from './useFormStep';
+
+// Async validation with AbortController
+export {
+  useAsyncValidation,
+  type UseAsyncValidationOptions,
+  type UseAsyncValidationReturn,
+  type AsyncValidatorFn,
+} from './useAsyncValidation';
