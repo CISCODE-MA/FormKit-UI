@@ -94,7 +94,6 @@ export default function PasswordField({ config }: Props): JSX.Element {
             p-1.5 rounded
             text-gray-500 hover:text-gray-700
             transition-colors duration-150
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1
             ${isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
           `}
         >

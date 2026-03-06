@@ -236,7 +236,6 @@
     { "code": "VG", "name": "British Virgin Islands", "dialCode": "+1284" },
     { "code": "VI", "name": "U.S. Virgin Islands", "dialCode": "+1340" },
     { "code": "WF", "name": "Wallis and Futuna", "dialCode": "+681" },
-    { "code": "EH", "name": "Western Sahara", "dialCode": "+212" },
     { "code": "YE", "name": "Yemen", "dialCode": "+967" },
     { "code": "ZM", "name": "Zambia", "dialCode": "+260" },
     { "code": "ZW", "name": "Zimbabwe", "dialCode": "+263" }
