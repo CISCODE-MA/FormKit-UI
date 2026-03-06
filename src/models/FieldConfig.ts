@@ -88,6 +88,14 @@ export interface FieldConfig<TValue = unknown> {
   /** Maximum number of rows */
   readonly maxRows?: number;
 
+  // ── File field (only when type === FieldType.FILE) ────────────
+  /** Accepted file types (MIME types or extensions, e.g., 'image/*', '.pdf', 'application/json') */
+  readonly accept?: string;
+  /** Maximum file size in bytes */
+  readonly maxFileSize?: number;
+  /** Allow multiple file selection */
+  readonly multiple?: boolean;
+
   // ── Layout ────────────────────────────────────────────────────
   /** Column span in grid layout */
   readonly colSpan?: 1 | 2 | 3 | 4;
