@@ -17,6 +17,7 @@ import RadioGroupField from './RadioGroupField';
 import SwitchField from './SwitchField';
 import DateField from './DateField';
 import FileField from './FileField';
+import PhoneField from './PhoneField';
 import ArrayField from './ArrayField';
 
 /**
@@ -80,6 +81,9 @@ export default function Field({ config }: Props): JSX.Element | null {
 
       case FieldType.DATE:
         return <DateField config={config} />;
+
+      case FieldType.PHONE:
+        return <PhoneField config={config} />;
 
       case FieldType.FILE:
         return <FileField config={config} />;

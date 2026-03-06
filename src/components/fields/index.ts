@@ -12,4 +12,10 @@ export { default as RadioGroupField, type RadioGroupFieldProps } from './RadioGr
 export { default as SwitchField, type SwitchFieldProps } from './SwitchField';
 export { default as DateField, type DateFieldProps } from './DateField';
 export { default as FileField, type FileFieldProps } from './FileField';
+export {
+  default as PhoneField,
+  type PhoneFieldProps,
+  type PhoneValue,
+  type CountryCode,
+} from './PhoneField';
 export { default as ArrayField, type ArrayFieldProps } from './ArrayField';

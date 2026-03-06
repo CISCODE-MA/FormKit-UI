@@ -39,6 +39,8 @@ export enum FieldType {
   DATE = 'date',
   /** File upload */
   FILE = 'file',
+  /** Phone number with country code */
+  PHONE = 'phone',
   /** Repeatable field group */
   ARRAY = 'array',
 }
