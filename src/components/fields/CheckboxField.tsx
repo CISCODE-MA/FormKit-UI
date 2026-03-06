@@ -60,7 +60,6 @@ export default function CheckboxField({ config }: Props): JSX.Element {
             border-2 border-gray-300
             text-blue-600
             transition-all duration-150
-            focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
             hover:border-gray-400
             ${showError ? 'border-red-500 focus:ring-red-500' : ''}
             ${isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}

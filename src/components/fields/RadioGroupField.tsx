@@ -79,7 +79,6 @@ export default function RadioGroupField({ config }: Props): JSX.Element {
                   h-4 w-4
                   border-gray-300
                   text-blue-600
-                  focus:ring-2 focus:ring-blue-500
                   ${isDisabled || option.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
                 `}
               />
