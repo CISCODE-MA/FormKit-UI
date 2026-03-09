@@ -18,6 +18,7 @@ import SwitchField from './SwitchField';
 import DateField from './DateField';
 import FileField from './FileField';
 import PhoneField from './PhoneField';
+import SliderField from './SliderField';
 import ArrayField from './ArrayField';
 
 /**
@@ -87,6 +88,9 @@ export default function Field({ config }: Props): JSX.Element | null {
 
       case FieldType.FILE:
         return <FileField config={config} />;
+
+      case FieldType.SLIDER:
+        return <SliderField config={config} />;
 
       case FieldType.ARRAY:
         return <ArrayField config={config} />;

@@ -18,4 +18,5 @@ export {
   type PhoneValue,
   type CountryCode,
 } from './PhoneField';
+export { default as SliderField, type SliderFieldProps } from './SliderField';
 export { default as ArrayField, type ArrayFieldProps } from './ArrayField';

@@ -41,6 +41,8 @@ export enum FieldType {
   FILE = 'file',
   /** Phone number with country code */
   PHONE = 'phone',
+  /** Range slider */
+  SLIDER = 'slider',
   /** Repeatable field group */
   ARRAY = 'array',
 }

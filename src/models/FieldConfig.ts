@@ -96,6 +96,16 @@ export interface FieldConfig<TValue = unknown> {
   /** Allow multiple file selection */
   readonly multiple?: boolean;
 
+  // ── Slider field (only when type === FieldType.SLIDER) ────────
+  /** Minimum value (default: 0) */
+  readonly min?: number;
+  /** Maximum value (default: 100) */
+  readonly max?: number;
+  /** Step increment (default: 1) */
+  readonly step?: number;
+  /** Show current value badge (default: true) */
+  readonly showValue?: boolean;
+
   // ── Layout ────────────────────────────────────────────────────
   /** Column span in grid layout */
   readonly colSpan?: 1 | 2 | 3 | 4;
