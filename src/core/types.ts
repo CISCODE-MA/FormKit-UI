@@ -43,6 +43,8 @@ export enum FieldType {
   PHONE = 'phone',
   /** Range slider */
   SLIDER = 'slider',
+  /** Dual-thumb range slider */
+  RANGE_SLIDER = 'range-slider',
   /** Repeatable field group */
   ARRAY = 'array',
 }
