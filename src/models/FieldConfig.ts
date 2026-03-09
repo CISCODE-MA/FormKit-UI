@@ -106,6 +106,10 @@ export interface FieldConfig<TValue = unknown> {
   /** Show current value badge (default: true) */
   readonly showValue?: boolean;
 
+  // ── OTP field (only when type === FieldType.OTP) ──────────────
+  /** Number of OTP digits (default: 6) */
+  readonly otpLength?: 4 | 5 | 6 | 7 | 8;
+
   // ── Layout ────────────────────────────────────────────────────
   /** Column span in grid layout */
   readonly colSpan?: 1 | 2 | 3 | 4;

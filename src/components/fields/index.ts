@@ -24,4 +24,5 @@ export {
   type RangeSliderFieldProps,
   type RangeValue,
 } from './RangeSliderField';
+export { default as OTPField, type OTPFieldProps } from './OTPField';
 export { default as ArrayField, type ArrayFieldProps } from './ArrayField';
