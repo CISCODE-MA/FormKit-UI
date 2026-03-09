@@ -47,6 +47,8 @@ export enum FieldType {
   RANGE_SLIDER = 'range-slider',
   /** OTP / verification code input */
   OTP = 'otp',
+  /** Multi-tag input */
+  TAGS = 'tags',
   /** Repeatable field group */
   ARRAY = 'array',
 }

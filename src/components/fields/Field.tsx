@@ -21,6 +21,7 @@ import PhoneField from './PhoneField';
 import SliderField from './SliderField';
 import RangeSliderField from './RangeSliderField';
 import OTPField from './OTPField';
+import TagsField from './TagsField';
 import ArrayField from './ArrayField';
 
 /**
@@ -99,6 +100,9 @@ export default function Field({ config }: Props): JSX.Element | null {
 
       case FieldType.OTP:
         return <OTPField config={config} />;
+
+      case FieldType.TAGS:
+        return <TagsField config={config} />;
 
       case FieldType.ARRAY:
         return <ArrayField config={config} />;

@@ -110,6 +110,14 @@ export interface FieldConfig<TValue = unknown> {
   /** Number of OTP digits (default: 6) */
   readonly otpLength?: 4 | 5 | 6 | 7 | 8;
 
+  // ── Tags field (only when type === FieldType.TAGS) ────────────
+  /** Maximum number of tags allowed */
+  readonly maxTags?: number;
+  /** Minimum number of tags required */
+  readonly minTags?: number;
+  /** Allow duplicate tags (default: false) */
+  readonly allowDuplicates?: boolean;
+
   // ── Layout ────────────────────────────────────────────────────
   /** Column span in grid layout */
   readonly colSpan?: 1 | 2 | 3 | 4;
