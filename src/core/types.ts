@@ -49,6 +49,8 @@ export enum FieldType {
   OTP = 'otp',
   /** Multi-tag input */
   TAGS = 'tags',
+  /** Star rating input */
+  RATING = 'rating',
   /** Repeatable field group */
   ARRAY = 'array',
 }

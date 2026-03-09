@@ -118,6 +118,12 @@ export interface FieldConfig<TValue = unknown> {
   /** Allow duplicate tags (default: false) */
   readonly allowDuplicates?: boolean;
 
+  // ── Rating field (only when type === FieldType.RATING) ────────
+  /** Maximum rating value (default: 5) */
+  readonly maxRating?: number;
+  /** Allow half-star ratings (default: false) */
+  readonly allowHalf?: boolean;
+
   // ── Layout ────────────────────────────────────────────────────
   /** Column span in grid layout */
   readonly colSpan?: 1 | 2 | 3 | 4;
