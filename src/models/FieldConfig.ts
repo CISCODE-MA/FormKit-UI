@@ -124,6 +124,10 @@ export interface FieldConfig<TValue = unknown> {
   /** Allow half-star ratings (default: false) */
   readonly allowHalf?: boolean;
 
+  // ── Time field (only when type === FieldType.TIME) ────────────
+  /** Time step in seconds (default: 60) */
+  readonly timeStep?: number;
+
   // ── Layout ────────────────────────────────────────────────────
   /** Column span in grid layout */
   readonly colSpan?: 1 | 2 | 3 | 4;

@@ -51,6 +51,8 @@ export enum FieldType {
   TAGS = 'tags',
   /** Star rating input */
   RATING = 'rating',
+  /** Time input */
+  TIME = 'time',
   /** Repeatable field group */
   ARRAY = 'array',
 }

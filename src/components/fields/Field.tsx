@@ -23,6 +23,7 @@ import RangeSliderField from './RangeSliderField';
 import OTPField from './OTPField';
 import TagsField from './TagsField';
 import RatingField from './RatingField';
+import TimeField from './TimeField';
 import ArrayField from './ArrayField';
 
 /**
@@ -107,6 +108,9 @@ export default function Field({ config }: Props): JSX.Element | null {
 
       case FieldType.RATING:
         return <RatingField config={config} />;
+
+      case FieldType.TIME:
+        return <TimeField config={config} />;
 
       case FieldType.ARRAY:
         return <ArrayField config={config} />;
