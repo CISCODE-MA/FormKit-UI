@@ -53,6 +53,8 @@ export enum FieldType {
   RATING = 'rating',
   /** Time input */
   TIME = 'time',
+  /** Combined date and time input */
+  DATETIME = 'datetime',
   /** Repeatable field group */
   ARRAY = 'array',
 }

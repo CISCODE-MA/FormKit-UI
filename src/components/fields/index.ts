@@ -28,4 +28,5 @@ export { default as OTPField, type OTPFieldProps } from './OTPField';
 export { default as TagsField, type TagsFieldProps } from './TagsField';
 export { default as RatingField, type RatingFieldProps } from './RatingField';
 export { default as TimeField, type TimeFieldProps } from './TimeField';
+export { default as DateTimeField, type DateTimeFieldProps } from './DateTimeField';
 export { default as ArrayField, type ArrayFieldProps } from './ArrayField';

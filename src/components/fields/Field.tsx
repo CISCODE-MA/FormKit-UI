@@ -24,6 +24,7 @@ import OTPField from './OTPField';
 import TagsField from './TagsField';
 import RatingField from './RatingField';
 import TimeField from './TimeField';
+import DateTimeField from './DateTimeField';
 import ArrayField from './ArrayField';
 
 /**
@@ -111,6 +112,9 @@ export default function Field({ config }: Props): JSX.Element | null {
 
       case FieldType.TIME:
         return <TimeField config={config} />;
+
+      case FieldType.DATETIME:
+        return <DateTimeField config={config} />;
 
       case FieldType.ARRAY:
         return <ArrayField config={config} />;
