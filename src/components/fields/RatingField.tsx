@@ -167,7 +167,7 @@ export default function RatingField({ config }: Props): JSX.Element {
         className={`
           formkit-rating-stars
           inline-flex gap-1
-          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+          focus:outline-none
           rounded
           ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         `}
