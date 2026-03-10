@@ -190,7 +190,8 @@ describe('SelectField edge cases', () => {
       />,
     );
 
-    expect(screen.getByRole('combobox')).toBeDisabled();
+    // Custom dropdown uses tabIndex=-1 when disabled
+    expect(screen.getByRole('combobox')).toHaveAttribute('tabindex', '-1');
   });
 
   it('displays validation error', async () => {

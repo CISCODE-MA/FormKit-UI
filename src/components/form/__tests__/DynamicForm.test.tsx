@@ -91,7 +91,8 @@ describe('DynamicForm', () => {
       expect(screen.getByRole('textbox', { name: 'Email' })).toHaveAttribute('type', 'email');
     });
 
-    it('renders SelectField for SELECT type', () => {
+    it('renders SelectField for SELECT type', async () => {
+      const user = userEvent.setup();
       const fields: FieldConfig[] = [
         {
           key: 'role',
@@ -113,7 +114,11 @@ describe('DynamicForm', () => {
         />,
       );
 
-      expect(screen.getByRole('combobox', { name: 'Role' })).toBeInTheDocument();
+      const combobox = screen.getByRole('combobox');
+      expect(combobox).toBeInTheDocument();
+
+      // Click to open dropdown and verify options
+      await user.click(combobox);
       expect(screen.getByRole('option', { name: 'Admin' })).toBeInTheDocument();
       expect(screen.getByRole('option', { name: 'User' })).toBeInTheDocument();
     });
@@ -304,8 +309,10 @@ describe('DynamicForm', () => {
       // Permissions should be hidden initially
       expect(screen.queryByLabelText('Permissions')).not.toBeInTheDocument();
 
-      // Select admin role
-      await user.selectOptions(screen.getByLabelText('Role'), 'admin');
+      // Select admin role via custom dropdown
+      const combobox = screen.getByRole('combobox');
+      await user.click(combobox);
+      await user.click(screen.getByRole('option', { name: 'Admin' }));
 
       // Permissions should now be visible
       expect(screen.getByLabelText('Permissions')).toBeInTheDocument();

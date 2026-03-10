@@ -78,7 +78,8 @@ describe('Field routing', () => {
   });
 
   describe('select and option types', () => {
-    it('routes SELECT to SelectField', () => {
+    it('routes SELECT to SelectField', async () => {
+      const user = userEvent.setup();
       const fields: FieldConfig[] = [
         {
           key: 'country',
@@ -102,6 +103,9 @@ describe('Field routing', () => {
 
       const select = screen.getByRole('combobox');
       expect(select).toBeInTheDocument();
+
+      // Click to open dropdown and verify options
+      await user.click(select);
       expect(screen.getByRole('option', { name: 'United States' })).toBeInTheDocument();
     });
 
@@ -348,7 +352,6 @@ describe('Field interactions', () => {
         label: 'Color',
         type: FieldType.SELECT,
         options: [
-          { value: '', label: 'Select...' },
           { value: 'red', label: 'Red' },
           { value: 'blue', label: 'Blue' },
         ],
@@ -365,9 +368,11 @@ describe('Field interactions', () => {
     );
 
     const select = screen.getByRole('combobox');
-    await user.selectOptions(select, 'blue');
+    await user.click(select);
+    await user.click(screen.getByRole('option', { name: 'Blue' }));
 
-    expect(select).toHaveValue('blue');
+    // After selection, the selected option text should be visible
+    expect(screen.getByText('Blue')).toBeInTheDocument();
   });
 
   it('handles radio selection', async () => {
