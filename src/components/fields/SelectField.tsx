@@ -165,7 +165,7 @@ export default function SelectField({ config }: Props): JSX.Element {
   }, [isOpen]);
 
   return (
-    <div className="formkit-select-field flex flex-col gap-1 mb-4" ref={containerRef}>
+    <div className="formkit-select-field flex flex-col gap-1 mb-4 relative" ref={containerRef}>
       <FieldLabel htmlFor={fieldId} label={config.label} required={config.required} />
 
       {config.description && !showError && (
@@ -258,12 +258,11 @@ export default function SelectField({ config }: Props): JSX.Element {
         <div
           className="
             formkit-select-dropdown
-            absolute z-50 mt-1
+            absolute z-50 mt-[92px]
             w-full max-h-60
             bg-white border border-gray-300 rounded-lg shadow-lg
             overflow-hidden
           "
-          style={{ position: 'relative' }}
         >
           {/* Search input */}
           <div className="p-2 border-b border-gray-200">
@@ -314,7 +313,8 @@ export default function SelectField({ config }: Props): JSX.Element {
             id={listboxId}
             role="listbox"
             aria-label={config.label}
-            className="max-h-48 overflow-auto py-1"
+            className="max-h-48 overflow-auto py-1 scrollbar-none"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {filteredOptions.length === 0 ? (
               <li className="px-3 py-2 text-sm text-gray-500 text-center">No options found</li>
