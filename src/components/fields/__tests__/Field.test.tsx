@@ -204,7 +204,10 @@ describe('Field routing', () => {
         />,
       );
 
-      expect(screen.getByLabelText('Birthday')).toHaveAttribute('type', 'date');
+      // DateField now uses custom dropdown with combobox role
+      const combobox = screen.getByRole('combobox');
+      expect(combobox).toBeInTheDocument();
+      expect(combobox).toHaveAttribute('aria-haspopup', 'dialog');
     });
   });
 

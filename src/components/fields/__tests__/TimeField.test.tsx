@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { z } from 'zod';
 import { FieldType } from '../../../core/types';
@@ -31,33 +31,42 @@ describe('TimeField', () => {
     );
   };
 
-  it('renders time input', () => {
+  it('renders time picker', () => {
     renderTimeField();
-    const input = screen.getByLabelText('Start Time');
-    expect(input).toHaveAttribute('type', 'time');
+    const combobox = screen.getByRole('combobox');
+    expect(combobox).toBeInTheDocument();
+    expect(combobox).toHaveAttribute('aria-haspopup', 'dialog');
   });
 
-  it('displays default value', () => {
+  it('displays default value formatted', () => {
     renderTimeField({}, '14:30');
-    const input = screen.getByLabelText('Start Time');
-    expect(input).toHaveValue('14:30');
+    expect(screen.getByText('2:30 PM')).toBeInTheDocument();
   });
 
-  it('accepts time input', async () => {
+  it('opens time picker dropdown on click', async () => {
     const user = userEvent.setup();
     renderTimeField();
 
-    const input = screen.getByLabelText('Start Time');
-    await user.clear(input);
-    await user.type(input, '09:00');
+    const combobox = screen.getByRole('combobox');
+    await user.click(combobox);
 
-    expect(input).toHaveValue('09:00');
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByText('Hour')).toBeInTheDocument();
+    expect(screen.getByText('Min')).toBeInTheDocument();
   });
 
-  it('uses custom timeStep', () => {
-    renderTimeField({ timeStep: 900 }); // 15 minutes
-    const input = screen.getByLabelText('Start Time');
-    expect(input).toHaveAttribute('step', '900');
+  it('selects time via dropdown', async () => {
+    const user = userEvent.setup();
+    renderTimeField();
+
+    await user.click(screen.getByRole('combobox'));
+
+    // The time picker shows hour and minute columns with confirm button
+    const hours = screen.getAllByRole('option');
+    expect(hours.length).toBeGreaterThan(0);
+
+    const confirmBtn = screen.getByRole('button', { name: 'Confirm' });
+    expect(confirmBtn).toBeInTheDocument();
   });
 
   it('shows required indicator', () => {
@@ -70,24 +79,27 @@ describe('TimeField', () => {
     expect(screen.getByText('Select appointment time')).toBeInTheDocument();
   });
 
-  it('disables input when disabled', () => {
+  it('disables interaction when disabled', () => {
     renderTimeField({ disabled: true });
-    expect(screen.getByLabelText('Start Time')).toBeDisabled();
-  });
-
-  it('sets readOnly attribute', () => {
-    renderTimeField({ readOnly: true });
-    expect(screen.getByLabelText('Start Time')).toHaveAttribute('readonly');
+    expect(screen.getByRole('combobox')).toHaveAttribute('tabindex', '-1');
   });
 
   it('has proper aria attributes', () => {
-    renderTimeField({
-      required: true,
-      description: 'Pick a time',
-    });
+    renderTimeField({ required: true });
+    const combobox = screen.getByRole('combobox');
+    expect(combobox).toHaveAttribute('aria-required', 'true');
+  });
 
-    // Use regex to match label text that includes the required asterisk
-    const input = screen.getByLabelText(/Start Time/);
-    expect(input).toHaveAttribute('aria-required', 'true');
+  it('closes dropdown on escape', async () => {
+    const user = userEvent.setup();
+    renderTimeField();
+
+    await user.click(screen.getByRole('combobox'));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    await user.keyboard('{Escape}');
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
   });
 });

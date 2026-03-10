@@ -485,7 +485,8 @@ describe('DateField edge cases', () => {
       />,
     );
 
-    expect(screen.getByLabelText('Birth Date')).toBeDisabled();
+    // Custom dropdown uses tabindex=-1 when disabled
+    expect(screen.getByRole('combobox')).toHaveAttribute('tabindex', '-1');
   });
 
   it('displays validation error', async () => {
