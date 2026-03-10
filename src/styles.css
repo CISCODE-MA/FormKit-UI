@@ -9,3 +9,27 @@
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+
+/* Ensure form components are responsive */
+.formkit-dynamic-form {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Prevent overflow on narrow screens */
+.formkit-field {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Responsive dropdown positioning */
+@media (max-width: 640px) {
+  .formkit-date-dropdown,
+  .formkit-time-dropdown,
+  .formkit-datetime-dropdown,
+  .formkit-select-dropdown,
+  .formkit-multiselect-dropdown {
+    max-width: calc(100vw - 2rem);
+  }
+}
