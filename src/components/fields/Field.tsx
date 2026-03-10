@@ -12,6 +12,7 @@ import TextField from './TextField';
 import PasswordField from './PasswordField';
 import TextareaField from './TextareaField';
 import SelectField from './SelectField';
+import MultiSelectField from './MultiSelectField';
 import CheckboxField from './CheckboxField';
 import RadioGroupField from './RadioGroupField';
 import SwitchField from './SwitchField';
@@ -74,8 +75,7 @@ export default function Field({ config }: Props): JSX.Element | null {
         return <SelectField config={config} />;
 
       case FieldType.MULTI_SELECT:
-        // TODO: Implement MultiSelectField
-        return <SelectField config={config} />;
+        return <MultiSelectField config={config} />;
 
       case FieldType.CHECKBOX:
         return <CheckboxField config={config} />;
