@@ -165,7 +165,7 @@ export default function SelectField({ config }: Props): JSX.Element {
   }, [isOpen]);
 
   return (
-    <div className="formkit-select-field flex flex-col gap-1 mb-4 relative" ref={containerRef}>
+    <div className="formkit-select-field flex flex-col gap-1 mb-4" ref={containerRef}>
       <FieldLabel htmlFor={fieldId} label={config.label} required={config.required} />
 
       {config.description && !showError && (
@@ -174,186 +174,195 @@ export default function SelectField({ config }: Props): JSX.Element {
         </p>
       )}
 
-      {/* Main control area */}
-      <div
-        id={fieldId}
-        role="combobox"
-        aria-expanded={isOpen}
-        aria-haspopup="listbox"
-        aria-controls={listboxId}
-        aria-invalid={showError}
-        aria-required={config.required}
-        aria-describedby={describedBy}
-        aria-activedescendant={
-          isOpen && focusedIndex >= 0 ? `${fieldId}-option-${focusedIndex}` : undefined
-        }
-        tabIndex={isDisabled ? -1 : 0}
-        onKeyDown={handleKeyDown}
-        onClick={() => !isDisabled && setIsOpen(!isOpen)}
-        onBlur={(e) => {
-          if (!containerRef.current?.contains(e.relatedTarget as Node)) {
-            setIsOpen(false);
-            setSearchQuery('');
-            setTouched(config.key, true);
-          }
-        }}
-        className={`
-          formkit-select-control
-          min-h-[42px] px-3 py-2
-          border rounded-lg
-          cursor-pointer
-          transition-colors duration-150
-          focus:outline-none focus:ring-2 focus:ring-blue-500
-          ${showError ? 'border-red-500 hover:border-red-400' : 'border-gray-300 hover:border-gray-400'}
-          ${isDisabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
-          ${isOpen ? 'ring-2 ring-blue-500 border-blue-500' : ''}
-        `}
-      >
-        <div className="flex items-center gap-2">
-          {/* Selected value display */}
-          <span className={`flex-1 ${selectedOption ? 'text-gray-900' : 'text-gray-400'}`}>
-            {selectedOption ? selectedOption.label : (config.placeholder ?? 'Select an option...')}
-          </span>
-
-          {/* Clear button */}
-          {selectedOption && !isDisabled && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                clearSelection();
-              }}
-              aria-label="Clear selection"
-              className="
-                p-1 text-gray-400 hover:text-gray-600
-                focus:outline-none focus:ring-1 focus:ring-blue-500 rounded
-              "
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          )}
-
-          {/* Dropdown arrow */}
-          <svg
-            className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
-      </div>
-
-      {/* Dropdown */}
-      {isOpen && !isDisabled && (
+      <div className="relative">
+        {/* Main control area */}
         <div
-          className="
-            formkit-select-dropdown
-            absolute z-50 mt-[92px]
-            w-full max-h-60
-            bg-white border border-gray-300 rounded-lg shadow-lg
-            overflow-hidden
-          "
+          id={fieldId}
+          role="combobox"
+          aria-expanded={isOpen}
+          aria-haspopup="listbox"
+          aria-controls={listboxId}
+          aria-invalid={showError}
+          aria-required={config.required}
+          aria-describedby={describedBy}
+          aria-activedescendant={
+            isOpen && focusedIndex >= 0 ? `${fieldId}-option-${focusedIndex}` : undefined
+          }
+          tabIndex={isDisabled ? -1 : 0}
+          onKeyDown={handleKeyDown}
+          onClick={() => !isDisabled && setIsOpen(!isOpen)}
+          onBlur={(e) => {
+            if (!containerRef.current?.contains(e.relatedTarget as Node)) {
+              setIsOpen(false);
+              setSearchQuery('');
+              setTouched(config.key, true);
+            }
+          }}
+          className={`
+            formkit-select-control
+            min-h-[42px] px-3 py-2
+            border rounded-lg
+            cursor-pointer
+            transition-colors duration-150
+            focus:outline-none focus:ring-2 focus:ring-blue-500
+            ${showError ? 'border-red-500 hover:border-red-400' : 'border-gray-300 hover:border-gray-400'}
+            ${isDisabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
+            ${isOpen ? 'ring-2 ring-blue-500 border-blue-500' : ''}
+          `}
         >
-          {/* Search input */}
-          <div className="p-2 border-b border-gray-200">
-            <input
-              ref={searchInputRef}
-              type="text"
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setFocusedIndex(0);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Escape') {
-                  e.preventDefault();
-                  setIsOpen(false);
-                  setSearchQuery('');
-                  setFocusedIndex(-1);
-                } else if (e.key === 'ArrowDown') {
-                  e.preventDefault();
-                  setFocusedIndex((prev) => Math.min(prev + 1, filteredOptions.length - 1));
-                } else if (e.key === 'ArrowUp') {
-                  e.preventDefault();
-                  setFocusedIndex((prev) => Math.max(prev - 1, 0));
-                } else if (
-                  e.key === 'Enter' &&
-                  focusedIndex >= 0 &&
-                  focusedIndex < filteredOptions.length
-                ) {
-                  e.preventDefault();
-                  selectOption(filteredOptions[focusedIndex].value);
-                }
-              }}
-              placeholder="Search..."
-              aria-label="Search options"
-              className="
-                w-full px-3 py-1.5
-                text-sm
-                border border-gray-300 rounded-md
-                focus:outline-none
-              "
-              onClick={(e) => e.stopPropagation()}
-            />
-          </div>
+          <div className="flex items-center gap-2">
+            {/* Selected value display */}
+            <span className={`flex-1 ${selectedOption ? 'text-gray-900' : 'text-gray-400'}`}>
+              {selectedOption
+                ? selectedOption.label
+                : (config.placeholder ?? 'Select an option...')}
+            </span>
 
-          {/* Options list */}
-          <ul
-            ref={listboxRef}
-            id={listboxId}
-            role="listbox"
-            aria-label={config.label}
-            className="max-h-48 overflow-auto py-1 scrollbar-none"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {filteredOptions.length === 0 ? (
-              <li className="px-3 py-2 text-sm text-gray-500 text-center">No options found</li>
-            ) : (
-              filteredOptions.map((option, index) => {
-                const isSelected = String(option.value) === String(value);
-                const isFocused = focusedIndex === index;
-
-                return (
-                  <li
-                    key={String(option.value)}
-                    id={`${fieldId}-option-${index}`}
-                    role="option"
-                    aria-selected={isSelected}
-                    aria-disabled={option.disabled}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (!option.disabled) {
-                        selectOption(option.value);
-                      }
-                    }}
-                    onMouseEnter={() => setFocusedIndex(index)}
-                    className={`
-                      flex items-center gap-2 px-3 py-2
-                      cursor-pointer text-sm
-                      transition-colors duration-100
-                      ${isFocused ? 'bg-blue-50' : ''}
-                      ${isSelected ? 'bg-blue-100' : ''}
-                      ${option.disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-50'}
-                    `}
-                  >
-                    <span className="flex-1">{option.label}</span>
-                  </li>
-                );
-              })
+            {/* Clear button */}
+            {selectedOption && !isDisabled && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  clearSelection();
+                }}
+                aria-label="Clear selection"
+                className="
+                  p-1 text-gray-400 hover:text-gray-600
+                  focus:outline-none focus:ring-1 focus:ring-blue-500 rounded
+                "
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
             )}
-          </ul>
+
+            {/* Dropdown arrow */}
+            <svg
+              className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
         </div>
-      )}
+
+        {/* Dropdown */}
+        {isOpen && !isDisabled && (
+          <div
+            className="
+              formkit-select-dropdown
+              absolute z-50 mt-[7px]
+              w-full max-h-60
+              bg-white border border-gray-300 rounded-lg shadow-lg
+              overflow-hidden
+            "
+          >
+            {/* Search input */}
+            <div className="p-2 border-b border-gray-200">
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setFocusedIndex(0);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') {
+                    e.preventDefault();
+                    setIsOpen(false);
+                    setSearchQuery('');
+                    setFocusedIndex(-1);
+                  } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    setFocusedIndex((prev) => Math.min(prev + 1, filteredOptions.length - 1));
+                  } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    setFocusedIndex((prev) => Math.max(prev - 1, 0));
+                  } else if (
+                    e.key === 'Enter' &&
+                    focusedIndex >= 0 &&
+                    focusedIndex < filteredOptions.length
+                  ) {
+                    e.preventDefault();
+                    selectOption(filteredOptions[focusedIndex].value);
+                  }
+                }}
+                placeholder="Search..."
+                aria-label="Search options"
+                className="
+                  w-full px-3 py-1.5
+                  text-sm
+                  border border-gray-300 rounded-md
+                  focus:outline-none
+                "
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+
+            {/* Options list */}
+            <ul
+              ref={listboxRef}
+              id={listboxId}
+              role="listbox"
+              aria-label={config.label}
+              className="max-h-48 overflow-auto py-1 scrollbar-none"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {filteredOptions.length === 0 ? (
+                <li className="px-3 py-2 text-sm text-gray-500 text-center">No options found</li>
+              ) : (
+                filteredOptions.map((option, index) => {
+                  const isSelected = String(option.value) === String(value);
+                  const isFocused = focusedIndex === index;
+
+                  return (
+                    <li
+                      key={String(option.value)}
+                      id={`${fieldId}-option-${index}`}
+                      role="option"
+                      aria-selected={isSelected}
+                      aria-disabled={option.disabled}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (!option.disabled) {
+                          selectOption(option.value);
+                        }
+                      }}
+                      onMouseEnter={() => setFocusedIndex(index)}
+                      className={`
+                        flex items-center gap-2 px-3 py-2
+                        cursor-pointer text-sm
+                        transition-colors duration-100
+                        ${isFocused ? 'bg-blue-50' : ''}
+                        ${isSelected ? 'bg-blue-100' : ''}
+                        ${option.disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-50'}
+                      `}
+                    >
+                      <span className="flex-1">{option.label}</span>
+                    </li>
+                  );
+                })
+              )}
+            </ul>
+          </div>
+        )}
+      </div>
 
       {showError && <FieldError id={errorId} message={error} />}
     </div>

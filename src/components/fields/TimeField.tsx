@@ -234,198 +234,205 @@ export default function TimeField({ config }: Props): JSX.Element {
         </p>
       )}
 
-      {/* Main control area */}
-      <div
-        id={fieldId}
-        role="combobox"
-        aria-expanded={isOpen}
-        aria-haspopup="dialog"
-        aria-invalid={showError}
-        aria-required={config.required}
-        aria-describedby={describedBy}
-        tabIndex={isDisabled ? -1 : 0}
-        onKeyDown={handleKeyDown}
-        onClick={() =>
-          !isDisabled && !config.readOnly && (isOpen ? setIsOpen(false) : openDropdown())
-        }
-        onBlur={(e) => {
-          // Only set touched, don't close dropdown (handled by click-outside)
-          if (
-            !containerRef.current?.contains(e.relatedTarget as Node) &&
-            !mouseDownInsideRef.current
-          ) {
-            setTouched(config.key, true);
-          }
-        }}
-        className={`
-          formkit-time-control
-          min-h-[42px] px-3 py-2
-          border rounded-lg
-          cursor-pointer
-          transition-colors duration-150
-          focus:outline-none focus:ring-2 focus:ring-blue-500
-          ${showError ? 'border-red-500 hover:border-red-400' : 'border-gray-300 hover:border-gray-400'}
-          ${isDisabled ? 'bg-gray-100 cursor-not-allowed opacity-50' : 'bg-white'}
-          ${config.readOnly ? 'bg-gray-50' : ''}
-          ${isOpen ? 'ring-2 ring-blue-500 border-blue-500' : ''}
-        `}
-      >
-        <div className="flex items-center gap-2">
-          {/* Clock icon */}
-          <svg
-            className="w-5 h-5 text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-
-          {/* Selected value display */}
-          <span className={`flex-1 ${currentValue ? 'text-gray-900' : 'text-gray-400'}`}>
-            {formatDisplayTime()}
-          </span>
-
-          {/* Clear button */}
-          {currentValue && !isDisabled && !config.readOnly && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                clearSelection();
-              }}
-              aria-label="Clear time"
-              className="
-                p-1 text-gray-400 hover:text-gray-600
-                focus:outline-none focus:ring-1 focus:ring-blue-500 rounded
-              "
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          )}
-
-          {/* Dropdown arrow */}
-          <svg
-            className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
-      </div>
-
-      {/* Time picker dropdown */}
-      {isOpen && !isDisabled && !config.readOnly && (
+      <div className="relative">
+        {/* Main control area */}
         <div
-          role="dialog"
-          aria-label="Choose time"
-          onClick={(e) => e.stopPropagation()}
-          onMouseDown={(e) => e.stopPropagation()}
-          className="
-            formkit-time-dropdown
-            absolute z-50 mt-[92px]
-            bg-white border border-gray-300 rounded-lg shadow-lg
-            p-3 w-52
-          "
+          id={fieldId}
+          role="combobox"
+          aria-expanded={isOpen}
+          aria-haspopup="dialog"
+          aria-invalid={showError}
+          aria-required={config.required}
+          aria-describedby={describedBy}
+          tabIndex={isDisabled ? -1 : 0}
+          onKeyDown={handleKeyDown}
+          onClick={() =>
+            !isDisabled && !config.readOnly && (isOpen ? setIsOpen(false) : openDropdown())
+          }
+          onBlur={(e) => {
+            // Only set touched, don't close dropdown (handled by click-outside)
+            if (
+              !containerRef.current?.contains(e.relatedTarget as Node) &&
+              !mouseDownInsideRef.current
+            ) {
+              setTouched(config.key, true);
+            }
+          }}
+          className={`
+            formkit-time-control
+            min-h-[42px] px-3 py-2
+            border rounded-lg
+            cursor-pointer
+            transition-colors duration-150
+            focus:outline-none focus:ring-2 focus:ring-blue-500
+            ${showError ? 'border-red-500 hover:border-red-400' : 'border-gray-300 hover:border-gray-400'}
+            ${isDisabled ? 'bg-gray-100 cursor-not-allowed opacity-50' : 'bg-white'}
+            ${config.readOnly ? 'bg-gray-50' : ''}
+            ${isOpen ? 'ring-2 ring-blue-500 border-blue-500' : ''}
+          `}
         >
-          <div className="flex gap-3 justify-center">
-            {/* Hours column */}
-            <div className="flex flex-1 flex-col p-2 border border-gray-200 rounded-md">
-              <span className="text-sm font-medium text-center mb-1">Hour</span>
-              <ul
-                ref={hourListRef}
-                role="listbox"
-                aria-label="Hour"
-                className="h-48 overflow-auto py-1 scrollbar-none"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          <div className="flex items-center gap-2">
+            {/* Clock icon */}
+            <svg
+              className="w-5 h-5 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+
+            {/* Selected value display */}
+            <span className={`flex-1 ${currentValue ? 'text-gray-900' : 'text-gray-400'}`}>
+              {formatDisplayTime()}
+            </span>
+
+            {/* Clear button */}
+            {currentValue && !isDisabled && !config.readOnly && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  clearSelection();
+                }}
+                aria-label="Clear time"
+                className="
+                  p-1 text-gray-400 hover:text-gray-600
+                  focus:outline-none focus:ring-1 focus:ring-blue-500 rounded
+                "
               >
-                {hourOptions.map((h) => {
-                  const displayHour = h % 12 || 12;
-                  const ampm = h >= 12 ? 'PM' : 'AM';
-                  return (
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+
+            {/* Dropdown arrow */}
+            <svg
+              className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+        </div>
+
+        {/* Time picker dropdown */}
+        {isOpen && !isDisabled && !config.readOnly && (
+          <div
+            role="dialog"
+            aria-label="Choose time"
+            onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+            className="
+              formkit-time-dropdown
+              absolute z-50 mt-[7px]
+              bg-white border border-gray-300 rounded-lg shadow-lg
+              p-3 w-52
+            "
+          >
+            <div className="flex gap-3 justify-center">
+              {/* Hours column */}
+              <div className="flex flex-1 flex-col p-2 border border-gray-200 rounded-md">
+                <span className="text-sm font-medium text-center mb-1">Hour</span>
+                <ul
+                  ref={hourListRef}
+                  role="listbox"
+                  aria-label="Hour"
+                  className="h-48 overflow-auto py-1 scrollbar-none"
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
+                  {hourOptions.map((h) => {
+                    const displayHour = h % 12 || 12;
+                    const ampm = h >= 12 ? 'PM' : 'AM';
+                    return (
+                      <li
+                        key={h}
+                        role="option"
+                        aria-selected={h === selectedHour}
+                        onClick={() => {
+                          setSelectedHour(h);
+                          setFocusedColumn('minute');
+                        }}
+                        className={`
+                          px-2 py-1.5 text-sm text-center rounded-md cursor-pointer
+                          transition-colors duration-100
+                          ${h === selectedHour ? 'bg-blue-100 text-blue-800 text-sm font-medium' : 'hover:bg-gray-100'}
+                        `}
+                      >
+                        {displayHour} {ampm}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              {/* Minutes column */}
+              <div className="flex flex-1 flex-col p-2 border border-gray-200 rounded-md">
+                <span className="text-sm font-medium text-center mb-1">Min</span>
+                <ul
+                  ref={minuteListRef}
+                  role="listbox"
+                  aria-label="Minute"
+                  className="h-48 overflow-auto py-1 scrollbar-none"
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
+                  {minuteOptions.map((m) => (
                     <li
-                      key={h}
+                      key={m}
                       role="option"
-                      aria-selected={h === selectedHour}
-                      onClick={() => {
-                        setSelectedHour(h);
-                        setFocusedColumn('minute');
-                      }}
+                      aria-selected={m === selectedMinute}
+                      onClick={() => setSelectedMinute(m)}
                       className={`
                         px-2 py-1.5 text-sm text-center rounded-md cursor-pointer
                         transition-colors duration-100
-                        ${h === selectedHour ? 'bg-blue-100 text-blue-800 text-sm font-medium' : 'hover:bg-gray-100'}
+                        ${m === selectedMinute ? 'bg-blue-100 text-blue-800 text-sm font-medium' : 'hover:bg-gray-100'}
                       `}
                     >
-                      {displayHour} {ampm}
+                      {String(m).padStart(2, '0')}
                     </li>
-                  );
-                })}
-              </ul>
+                  ))}
+                </ul>
+              </div>
             </div>
 
-            {/* Minutes column */}
-            <div className="flex flex-1 flex-col p-2 border border-gray-200 rounded-md">
-              <span className="text-sm font-medium text-center mb-1">Min</span>
-              <ul
-                ref={minuteListRef}
-                role="listbox"
-                aria-label="Minute"
-                className="h-48 overflow-auto py-1 scrollbar-none"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            {/* Confirm button */}
+            <div className="mt-3 pt-3 border-t border-gray-200">
+              <button
+                type="button"
+                onClick={confirmSelection}
+                className="
+                  w-full px-3 py-1.5 text-sm font-medium
+                  bg-blue-600 text-white rounded-lg
+                  hover:bg-blue-700
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1
+                "
               >
-                {minuteOptions.map((m) => (
-                  <li
-                    key={m}
-                    role="option"
-                    aria-selected={m === selectedMinute}
-                    onClick={() => setSelectedMinute(m)}
-                    className={`
-                      px-2 py-1.5 text-sm text-center rounded-md cursor-pointer
-                      transition-colors duration-100
-                      ${m === selectedMinute ? 'bg-blue-100 text-blue-800 text-sm font-medium' : 'hover:bg-gray-100'}
-                    `}
-                  >
-                    {String(m).padStart(2, '0')}
-                  </li>
-                ))}
-              </ul>
+                Confirm
+              </button>
             </div>
           </div>
-
-          {/* Confirm button */}
-          <div className="mt-3 pt-3 border-t border-gray-200">
-            <button
-              type="button"
-              onClick={confirmSelection}
-              className="
-                w-full px-3 py-1.5 text-sm font-medium
-                bg-blue-600 text-white rounded-lg
-                hover:bg-blue-700
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1
-              "
-            >
-              Confirm
-            </button>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {showError && <FieldError id={errorId} message={error} />}
     </div>
