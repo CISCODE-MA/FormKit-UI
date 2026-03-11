@@ -6,6 +6,7 @@
 import { useState, useRef, useEffect, type JSX, type KeyboardEvent } from 'react';
 import type { FieldConfig } from '../../models/FieldConfig';
 import { useFormKitContext } from '../context/FormKitContext';
+import { useI18n } from '../../hooks/useI18n';
 import FieldLabel from '../layout/FieldLabel';
 import FieldError from '../layout/FieldError';
 
@@ -23,6 +24,7 @@ type Props = {
  */
 export default function TimeField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
+  const { t, translations } = useI18n();
 
   const fieldId = `field-${config.key}`;
   const errorId = `${fieldId}-error`;
@@ -72,9 +74,9 @@ export default function TimeField({ config }: Props): JSX.Element {
 
   // Format time for display
   const formatDisplayTime = (): string => {
-    if (!currentValue) return config.placeholder ?? 'Select time...';
+    if (!currentValue) return config.placeholder ?? t('datetime.selectTime');
     const h = hours % 12 || 12;
-    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const ampm = hours >= 12 ? translations.datetime.pm : translations.datetime.am;
     return `${h}:${String(minutes).padStart(2, '0')} ${ampm}`;
   };
 
@@ -301,7 +303,7 @@ export default function TimeField({ config }: Props): JSX.Element {
                   e.stopPropagation();
                   clearSelection();
                 }}
-                aria-label="Clear time"
+                aria-label={t('field.clearSelection')}
                 className="
                   p-1 text-gray-400 hover:text-gray-600
                   focus:outline-none focus:ring-1 focus:ring-blue-500 rounded
@@ -340,7 +342,7 @@ export default function TimeField({ config }: Props): JSX.Element {
         {isOpen && !isDisabled && !config.readOnly && (
           <div
             role="dialog"
-            aria-label="Choose time"
+            aria-label={t('datetime.selectTime')}
             onClick={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
             className="
@@ -353,17 +355,16 @@ export default function TimeField({ config }: Props): JSX.Element {
             <div className="flex gap-3 justify-center">
               {/* Hours column */}
               <div className="flex flex-1 flex-col p-2 border border-gray-200 rounded-md">
-                <span className="text-sm font-medium text-center mb-1">Hour</span>
+                <span className="text-sm font-medium text-center mb-1">{t('datetime.hour')}</span>
                 <ul
                   ref={hourListRef}
                   role="listbox"
-                  aria-label="Hour"
+                  aria-label={t('datetime.hour')}
                   className="h-48 overflow-auto py-1 scrollbar-none"
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                   {hourOptions.map((h) => {
                     const displayHour = h % 12 || 12;
-                    const ampm = h >= 12 ? 'PM' : 'AM';
                     return (
                       <li
                         key={h}
@@ -379,7 +380,8 @@ export default function TimeField({ config }: Props): JSX.Element {
                           ${h === selectedHour ? 'bg-blue-100 text-blue-800 text-sm font-medium' : 'hover:bg-gray-100'}
                         `}
                       >
-                        {displayHour} {ampm}
+                        {displayHour}{' '}
+                        {h >= 12 ? translations.datetime.pm : translations.datetime.am}
                       </li>
                     );
                   })}
@@ -388,11 +390,11 @@ export default function TimeField({ config }: Props): JSX.Element {
 
               {/* Minutes column */}
               <div className="flex flex-1 flex-col p-2 border border-gray-200 rounded-md">
-                <span className="text-sm font-medium text-center mb-1">Min</span>
+                <span className="text-sm font-medium text-center mb-1">{t('datetime.minute')}</span>
                 <ul
                   ref={minuteListRef}
                   role="listbox"
-                  aria-label="Minute"
+                  aria-label={t('datetime.minute')}
                   className="h-48 overflow-auto py-1 scrollbar-none"
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
@@ -427,7 +429,7 @@ export default function TimeField({ config }: Props): JSX.Element {
                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1
                 "
               >
-                Confirm
+                {t('form.confirm')}
               </button>
             </div>
           </div>

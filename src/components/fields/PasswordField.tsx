@@ -5,6 +5,7 @@
 import { useState, type JSX } from 'react';
 import type { FieldConfig } from '../../models/FieldConfig';
 import { useFormKitContext } from '../context/FormKitContext';
+import { useI18n } from '../../hooks/useI18n';
 import FieldLabel from '../layout/FieldLabel';
 import FieldError from '../layout/FieldError';
 
@@ -21,6 +22,7 @@ type Props = {
  */
 export default function PasswordField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
+  const { t } = useI18n();
   const [showPassword, setShowPassword] = useState(false);
 
   const fieldId = `field-${config.key}`;
@@ -87,7 +89,7 @@ export default function PasswordField({ config }: Props): JSX.Element {
           type="button"
           onClick={() => setShowPassword(!showPassword)}
           disabled={isDisabled}
-          aria-label={showPassword ? 'Hide password' : 'Show password'}
+          aria-label={showPassword ? t('field.hidePassword') : t('field.showPassword')}
           aria-pressed={showPassword}
           className={`
             absolute right-2 top-1/2 -translate-y-1/2

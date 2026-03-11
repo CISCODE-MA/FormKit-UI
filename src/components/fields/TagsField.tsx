@@ -5,6 +5,7 @@
 import { useState, useRef, type JSX, type KeyboardEvent, type ClipboardEvent } from 'react';
 import type { FieldConfig } from '../../models/FieldConfig';
 import { useFormKitContext } from '../context/FormKitContext';
+import { useI18n } from '../../hooks/useI18n';
 import FieldLabel from '../layout/FieldLabel';
 import FieldError from '../layout/FieldError';
 
@@ -22,6 +23,7 @@ type Props = {
  */
 export default function TagsField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
+  const { t } = useI18n();
 
   const fieldId = `field-${config.key}`;
   const errorId = `${fieldId}-error`;
@@ -133,7 +135,7 @@ export default function TagsField({ config }: Props): JSX.Element {
           ${isDisabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
         `}
         role="listbox"
-        aria-label={`${config.label} tags`}
+        aria-label={`${config.label} ${t('tags.addTag')}`}
         aria-describedby={describedBy}
       >
         {tags.map((tag, index) => (
@@ -166,7 +168,7 @@ export default function TagsField({ config }: Props): JSX.Element {
                   rounded
                   focus:outline-none focus:ring-1 focus:ring-blue-500
                 "
-                aria-label={`Remove ${tag}`}
+                aria-label={`${t('tags.removeTag')}: ${tag}`}
               >
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -197,7 +199,7 @@ export default function TagsField({ config }: Props): JSX.Element {
               }
               setTouched(config.key, true);
             }}
-            placeholder={tags.length === 0 ? (config.placeholder ?? 'Type and press Enter') : ''}
+            placeholder={tags.length === 0 ? (config.placeholder ?? t('field.typeAndEnter')) : ''}
             disabled={isDisabled}
             aria-invalid={showError}
             className="

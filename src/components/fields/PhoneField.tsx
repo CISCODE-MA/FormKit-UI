@@ -5,6 +5,7 @@
 import { useState, type JSX, type ChangeEvent } from 'react';
 import type { FieldConfig } from '../../models/FieldConfig';
 import { useFormKitContext } from '../context/FormKitContext';
+import { useI18n } from '../../hooks/useI18n';
 import FieldLabel from '../layout/FieldLabel';
 import FieldError from '../layout/FieldError';
 import countriesData from '../../data/countries.json';
@@ -77,6 +78,7 @@ function parsePhoneValue(value: unknown): PhoneValue {
  */
 export default function PhoneField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
+  const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
 
   const fieldId = `field-${config.key}`;
@@ -143,7 +145,7 @@ export default function PhoneField({ config }: Props): JSX.Element {
             }}
             aria-haspopup="listbox"
             aria-expanded={isOpen}
-            aria-label={`Select country code, current: ${currentCountry.name} ${currentCountry.dialCode}`}
+            aria-label={`${t('phone.selectCountry')}: ${currentCountry.name} ${currentCountry.dialCode}`}
             className={`
               formkit-phone-country-select
               flex items-center gap-1
@@ -191,7 +193,7 @@ export default function PhoneField({ config }: Props): JSX.Element {
           {isOpen && !isDisabled && (
             <ul
               role="listbox"
-              aria-label="Select country"
+              aria-label={t('phone.selectCountry')}
               className="
                 absolute z-50 mt-1 left-0
                 max-h-60 w-64 overflow-auto
@@ -233,7 +235,7 @@ export default function PhoneField({ config }: Props): JSX.Element {
           type="tel"
           inputMode="tel"
           value={phoneValue.number}
-          placeholder={config.placeholder ?? 'Phone number'}
+          placeholder={config.placeholder ?? t('field.phoneNumber')}
           disabled={isDisabled}
           readOnly={config.readOnly}
           aria-invalid={showError}

@@ -5,6 +5,7 @@
 import { useState, type JSX, type KeyboardEvent } from 'react';
 import type { FieldConfig } from '../../models/FieldConfig';
 import { useFormKitContext } from '../context/FormKitContext';
+import { useI18n } from '../../hooks/useI18n';
 import FieldLabel from '../layout/FieldLabel';
 import FieldError from '../layout/FieldError';
 
@@ -64,6 +65,7 @@ function StarIcon({ filled, half }: { filled: boolean; half?: boolean }): JSX.El
  */
 export default function RatingField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
+  const { t } = useI18n();
 
   const fieldId = `field-${config.key}`;
   const errorId = `${fieldId}-error`;
@@ -157,7 +159,7 @@ export default function RatingField({ config }: Props): JSX.Element {
         aria-valuemin={0}
         aria-valuemax={maxRating}
         aria-valuenow={currentRating}
-        aria-valuetext={`${currentRating} out of ${maxRating} stars`}
+        aria-valuetext={`${currentRating} ${t('rating.outOf')} ${maxRating} ${t('rating.stars')}`}
         aria-invalid={showError}
         aria-describedby={describedBy}
         tabIndex={isDisabled ? -1 : 0}
@@ -224,7 +226,7 @@ export default function RatingField({ config }: Props): JSX.Element {
             <span className="text-gray-400"> / {maxRating}</span>
           </>
         ) : (
-          <span className="text-gray-400">No rating</span>
+          <span className="text-gray-400">{t('rating.noRating')}</span>
         )}
       </p>
 

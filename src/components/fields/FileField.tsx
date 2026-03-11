@@ -5,6 +5,7 @@
 import { useState, type JSX, type ChangeEvent } from 'react';
 import type { FieldConfig } from '../../models/FieldConfig';
 import { useFormKitContext } from '../context/FormKitContext';
+import { useI18n } from '../../hooks/useI18n';
 import FieldLabel from '../layout/FieldLabel';
 import FieldError from '../layout/FieldError';
 
@@ -57,6 +58,7 @@ type Props = {
  */
 export default function FileField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
+  const { t } = useI18n();
   const [fileError, setFileError] = useState<string | null>(null);
 
   const fieldId = `field-${config.key}`;
@@ -94,13 +96,15 @@ export default function FileField({ config }: Props): JSX.Element {
     for (const file of fileList) {
       // Check file type
       if (config.accept && !isValidFileType(file, config.accept)) {
-        errors.push(`"${file.name}" is not an accepted file type`);
+        errors.push(`"${file.name}" ${t('file.invalidType')}`);
         continue;
       }
 
       // Check file size
       if (config.maxFileSize && file.size > config.maxFileSize) {
-        errors.push(`"${file.name}" exceeds max size of ${formatFileSize(config.maxFileSize)}`);
+        errors.push(
+          `"${file.name}" ${t('file.exceedsMaxSize')} ${formatFileSize(config.maxFileSize)}`,
+        );
         continue;
       }
     }
@@ -162,14 +166,26 @@ export default function FileField({ config }: Props): JSX.Element {
             ${isDisabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
           `}
         />
-        {value && <p className="text-sm text-gray-600">Selected: {getFileName()}</p>}
+        {value && (
+          <p className="text-sm text-gray-600">
+            {t('file.selected')} {getFileName()}
+          </p>
+        )}
 
         {/* File constraints hint */}
         {(config.accept || config.maxFileSize) && !showError && (
           <p className="text-xs text-gray-500">
-            {config.accept && <span>Accepted: {config.accept}</span>}
+            {config.accept && (
+              <span>
+                {t('file.accepted')} {config.accept}
+              </span>
+            )}
             {config.accept && config.maxFileSize && <span> · </span>}
-            {config.maxFileSize && <span>Max size: {formatFileSize(config.maxFileSize)}</span>}
+            {config.maxFileSize && (
+              <span>
+                {t('file.maxSize')} {formatFileSize(config.maxFileSize)}
+              </span>
+            )}
           </p>
         )}
       </div>

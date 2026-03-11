@@ -8,8 +8,11 @@ import type { z } from 'zod';
 import type { FieldConfig } from '../../models/FieldConfig';
 import type { StepConfig } from '../../models/StepConfig';
 import type { FormValues, ValidationMode, FieldValue } from '../../core/types';
+import type { Locale, TranslationKeys } from '../../core/i18n';
 import type { FieldErrors } from '../../core/validator';
 import FormKitProvider from '../context/FormKitContext';
+import I18nProvider from '../context/I18nContext';
+import { useI18n } from '../../hooks/useI18n';
 import Field from '../fields/Field';
 import FormActions from '../layout/FormActions';
 
@@ -73,6 +76,12 @@ export interface DynamicFormProps<TValues extends FormValues = FormValues> {
   columns?: 1 | 2 | 3 | 4;
   /** Custom CSS class */
   className?: string;
+
+  // ── Internationalization ────────────────────────────────────
+  /** Locale for translations (default: 'en') */
+  locale?: Locale;
+  /** Custom translations to override defaults */
+  customTranslations?: Partial<TranslationKeys>;
 }
 
 /**
@@ -91,14 +100,60 @@ export default function DynamicForm<TValues extends FormValues = FormValues>({
   onChange,
   // mode is accepted but not yet implemented
   resetOnSubmit = false,
-  submitLabel = 'Submit',
+  submitLabel,
   resetLabel,
-  nextLabel = 'Next',
-  prevLabel = 'Back',
+  nextLabel,
+  prevLabel,
   showStepper = true,
   columns = 1,
   className = '',
+  locale = 'en',
+  customTranslations,
 }: DynamicFormProps<TValues>): JSX.Element {
+  return (
+    <I18nProvider locale={locale} customTranslations={customTranslations}>
+      <DynamicFormInner
+        schema={schema}
+        fields={fields}
+        steps={steps}
+        defaultValues={defaultValues}
+        onSubmit={onSubmit}
+        onError={onError}
+        onChange={onChange}
+        resetOnSubmit={resetOnSubmit}
+        submitLabel={submitLabel}
+        resetLabel={resetLabel}
+        nextLabel={nextLabel}
+        prevLabel={prevLabel}
+        showStepper={showStepper}
+        columns={columns}
+        className={className}
+      />
+    </I18nProvider>
+  );
+}
+
+/**
+ * Inner form component that has access to i18n context
+ */
+function DynamicFormInner<TValues extends FormValues = FormValues>({
+  schema,
+  fields,
+  steps,
+  defaultValues,
+  onSubmit,
+  onError,
+  onChange,
+  resetOnSubmit = false,
+  submitLabel,
+  resetLabel,
+  nextLabel,
+  prevLabel,
+  showStepper = true,
+  columns = 1,
+  className = '',
+}: Omit<DynamicFormProps<TValues>, 'locale' | 'customTranslations'>): JSX.Element {
+  const { t } = useI18n();
   // ── State ─────────────────────────────────────────────────────
   const [values, setValues] = useState<Partial<TValues>>(defaultValues);
   const [errors, setErrors] = useState<FieldErrors<TValues>>({});
@@ -229,13 +284,18 @@ export default function DynamicForm<TValues extends FormValues = FormValues>({
   // ── Grid class ────────────────────────────────────────────────
   const gridClass = columns > 1 ? `grid grid-cols-${columns} gap-4` : 'flex flex-col gap-4';
 
+  // ── Resolved labels with i18n ────────────────────────────────
+  const resolvedSubmitLabel = submitLabel ?? t('form.submit');
+  const resolvedNextLabel = nextLabel ?? t('form.next');
+  const resolvedPrevLabel = prevLabel ?? t('form.back');
+
   // ── Render ────────────────────────────────────────────────────
   return (
     <FormKitProvider value={contextValue}>
       <form className={`formkit-dynamic-form ${className}`} onSubmit={handleSubmit} noValidate>
         {/* Stepper (wizard mode) */}
         {isWizardMode && showStepper && steps && (
-          <div className="formkit-stepper mb-6" role="navigation" aria-label="Form steps">
+          <div className="formkit-stepper mb-6" role="navigation" aria-label={t('a11y.formSteps')}>
             <ol className="flex gap-2">
               {steps.map((step, index) => (
                 <li
@@ -261,10 +321,12 @@ export default function DynamicForm<TValues extends FormValues = FormValues>({
         {/* Actions */}
         <FormActions
           submitLabel={
-            isWizardMode && steps && currentStep < steps.length - 1 ? nextLabel : submitLabel
+            isWizardMode && steps && currentStep < steps.length - 1
+              ? resolvedNextLabel
+              : resolvedSubmitLabel
           }
           resetLabel={resetLabel}
-          prevLabel={isWizardMode && currentStep > 0 ? prevLabel : undefined}
+          prevLabel={isWizardMode && currentStep > 0 ? resolvedPrevLabel : undefined}
           isSubmitting={isSubmitting}
           onReset={resetLabel ? handleReset : undefined}
           onPrev={isWizardMode && currentStep > 0 ? handlePrev : undefined}

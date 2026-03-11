@@ -43,7 +43,7 @@ describe('PhoneField', () => {
   it('renders phone input with country selector', () => {
     renderPhoneField();
     expect(screen.getByLabelText('Phone Number')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Select country code/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Select country/i })).toBeInTheDocument();
   });
 
   it('displays country flag', () => {
@@ -73,7 +73,7 @@ describe('PhoneField', () => {
     const user = userEvent.setup();
     renderPhoneField();
 
-    const selector = screen.getByRole('button', { name: /Select country code/i });
+    const selector = screen.getByRole('button', { name: /Select country/i });
     await user.click(selector);
 
     // Should show country options listbox
@@ -85,7 +85,7 @@ describe('PhoneField', () => {
     renderPhoneField();
 
     // Open dropdown
-    const selector = screen.getByRole('button', { name: /Select country code/i });
+    const selector = screen.getByRole('button', { name: /Select country/i });
     await user.click(selector);
 
     // Click on UK option
@@ -100,7 +100,7 @@ describe('PhoneField', () => {
     const user = userEvent.setup();
     renderPhoneField();
 
-    const selector = screen.getByRole('button', { name: /Select country code/i });
+    const selector = screen.getByRole('button', { name: /Select country/i });
     await user.click(selector);
 
     // Listbox should be visible
@@ -122,7 +122,7 @@ describe('PhoneField', () => {
     renderPhoneField({ disabled: true });
     expect(screen.getByLabelText('Phone Number')).toBeDisabled();
     // Country selector is a button, not a combobox
-    expect(screen.getByRole('button', { name: /Select country code/i })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /Select country/i })).toBeDisabled();
   });
 
   it('shows description', () => {

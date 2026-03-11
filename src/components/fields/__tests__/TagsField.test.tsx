@@ -66,7 +66,7 @@ describe('TagsField', () => {
     const user = userEvent.setup();
     renderTagsField({}, ['removeme']);
 
-    const removeButton = screen.getByRole('button', { name: 'Remove removeme' });
+    const removeButton = screen.getByRole('button', { name: 'Remove tag: removeme' });
     await user.click(removeButton);
 
     expect(screen.queryByText('removeme')).not.toBeInTheDocument();

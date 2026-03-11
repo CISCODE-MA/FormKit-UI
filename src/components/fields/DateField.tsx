@@ -6,6 +6,7 @@
 import { useState, useRef, useEffect, type JSX, type KeyboardEvent } from 'react';
 import type { FieldConfig } from '../../models/FieldConfig';
 import { useFormKitContext } from '../context/FormKitContext';
+import { useI18n } from '../../hooks/useI18n';
 import FieldLabel from '../layout/FieldLabel';
 import FieldError from '../layout/FieldError';
 
@@ -16,23 +17,6 @@ type Props = {
   config: FieldConfig;
 };
 
-const MONTHS = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-
-const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-
 /**
  * DateField component for date selection
  * Custom calendar dropdown matching SelectField styling
@@ -40,6 +24,33 @@ const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
  */
 export default function DateField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
+  const { t, translations } = useI18n();
+
+  // Get translated months and weekdays
+  const MONTHS = [
+    translations.datetime.months.january,
+    translations.datetime.months.february,
+    translations.datetime.months.march,
+    translations.datetime.months.april,
+    translations.datetime.months.may,
+    translations.datetime.months.june,
+    translations.datetime.months.july,
+    translations.datetime.months.august,
+    translations.datetime.months.september,
+    translations.datetime.months.october,
+    translations.datetime.months.november,
+    translations.datetime.months.december,
+  ];
+
+  const WEEKDAYS = [
+    translations.datetime.daysShort.sun,
+    translations.datetime.daysShort.mon,
+    translations.datetime.daysShort.tue,
+    translations.datetime.daysShort.wed,
+    translations.datetime.daysShort.thu,
+    translations.datetime.daysShort.fri,
+    translations.datetime.daysShort.sat,
+  ];
 
   const fieldId = `field-${config.key}`;
   const errorId = `${fieldId}-error`;
@@ -80,7 +91,7 @@ export default function DateField({ config }: Props): JSX.Element {
 
   // Format date for display
   const formatDisplayDate = (): string => {
-    if (!selectedDate) return config.placeholder ?? 'Select date...';
+    if (!selectedDate) return config.placeholder ?? t('datetime.selectDate');
     return selectedDate.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -341,7 +352,7 @@ export default function DateField({ config }: Props): JSX.Element {
                   e.stopPropagation();
                   clearSelection();
                 }}
-                aria-label="Clear date"
+                aria-label={t('field.clearSelection')}
                 className="
                   p-1 text-gray-400 hover:text-gray-600
                   focus:outline-none focus:ring-1 focus:ring-blue-500 rounded
@@ -381,7 +392,7 @@ export default function DateField({ config }: Props): JSX.Element {
           <div
             ref={calendarRef}
             role="dialog"
-            aria-label="Choose date"
+            aria-label={t('datetime.selectDate')}
             onClick={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
             className="
@@ -396,7 +407,7 @@ export default function DateField({ config }: Props): JSX.Element {
               <button
                 type="button"
                 onClick={prevMonth}
-                aria-label="Previous month"
+                aria-label={t('datetime.previousMonth')}
                 className="p-1 hover:bg-gray-100 rounded-lg focus:outline-none"
               >
                 <svg
@@ -419,7 +430,7 @@ export default function DateField({ config }: Props): JSX.Element {
               <button
                 type="button"
                 onClick={nextMonth}
-                aria-label="Next month"
+                aria-label={t('datetime.nextMonth')}
                 className="p-1 hover:bg-gray-100 rounded-lg focus:outline-none"
               >
                 <svg
@@ -448,7 +459,7 @@ export default function DateField({ config }: Props): JSX.Element {
             </div>
 
             {/* Calendar grid */}
-            <div className="grid grid-cols-7 gap-0" role="grid" aria-label="Calendar">
+            <div className="grid grid-cols-7 gap-0" role="grid" aria-label={t('a11y.calendar')}>
               {calendarDays.map((date, index) => (
                 <div key={index} role="gridcell" className="flex items-center justify-center">
                   {date ? (
@@ -493,7 +504,7 @@ export default function DateField({ config }: Props): JSX.Element {
                   focus:outline-none focus:ring-2 focus:ring-blue-500
                 "
               >
-                Today
+                {t('datetime.today')}
               </button>
             </div>
           </div>

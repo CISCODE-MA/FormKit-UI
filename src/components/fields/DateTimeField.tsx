@@ -6,6 +6,7 @@
 import { useState, useRef, useEffect, type JSX, type KeyboardEvent } from 'react';
 import type { FieldConfig } from '../../models/FieldConfig';
 import { useFormKitContext } from '../context/FormKitContext';
+import { useI18n } from '../../hooks/useI18n';
 import FieldLabel from '../layout/FieldLabel';
 import FieldError from '../layout/FieldError';
 
@@ -16,23 +17,6 @@ type Props = {
   config: FieldConfig;
 };
 
-const MONTHS = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-
-const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-
 /**
  * DateTimeField component for combined date and time selection
  * Custom dropdown matching SelectField styling
@@ -40,6 +24,33 @@ const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
  */
 export default function DateTimeField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
+  const { t, translations } = useI18n();
+
+  // Get translated months and weekdays
+  const MONTHS = [
+    translations.datetime.months.january,
+    translations.datetime.months.february,
+    translations.datetime.months.march,
+    translations.datetime.months.april,
+    translations.datetime.months.may,
+    translations.datetime.months.june,
+    translations.datetime.months.july,
+    translations.datetime.months.august,
+    translations.datetime.months.september,
+    translations.datetime.months.october,
+    translations.datetime.months.november,
+    translations.datetime.months.december,
+  ];
+
+  const WEEKDAYS = [
+    translations.datetime.daysShort.sun,
+    translations.datetime.daysShort.mon,
+    translations.datetime.daysShort.tue,
+    translations.datetime.daysShort.wed,
+    translations.datetime.daysShort.thu,
+    translations.datetime.daysShort.fri,
+    translations.datetime.daysShort.sat,
+  ];
 
   const fieldId = `field-${config.key}`;
   const errorId = `${fieldId}-error`;
@@ -105,14 +116,14 @@ export default function DateTimeField({ config }: Props): JSX.Element {
 
   // Format datetime for display
   const formatDisplayDateTime = (): string => {
-    if (!selectedDate) return config.placeholder ?? 'Select date & time...';
+    if (!selectedDate) return config.placeholder ?? t('datetime.selectDate');
     const datePart = selectedDate.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
     });
     const h = hours % 12 || 12;
-    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const ampm = hours >= 12 ? translations.datetime.pm : translations.datetime.am;
     const timePart = `${h}:${String(minutes).padStart(2, '0')} ${ampm}`;
     return `${datePart}, ${timePart}`;
   };
@@ -351,7 +362,7 @@ export default function DateTimeField({ config }: Props): JSX.Element {
                   e.stopPropagation();
                   clearSelection();
                 }}
-                aria-label="Clear date and time"
+                aria-label={t('field.clearSelection')}
                 className="
                   p-1 text-gray-400 hover:text-gray-600
                   focus:outline-none focus:ring-1 focus:ring-blue-500 rounded
@@ -390,7 +401,7 @@ export default function DateTimeField({ config }: Props): JSX.Element {
         {isOpen && !isDisabled && !config.readOnly && (
           <div
             role="dialog"
-            aria-label="Choose date and time"
+            aria-label={t('datetime.selectDate')}
             onClick={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
             className="
@@ -424,7 +435,7 @@ export default function DateTimeField({ config }: Props): JSX.Element {
                       d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                     />
                   </svg>
-                  Date
+                  {t('datetime.dateLabel')}
                 </span>
               </button>
               <button
@@ -449,7 +460,7 @@ export default function DateTimeField({ config }: Props): JSX.Element {
                       d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  Time
+                  {t('datetime.timeLabel')}
                 </span>
               </button>
             </div>
@@ -462,7 +473,7 @@ export default function DateTimeField({ config }: Props): JSX.Element {
                   <button
                     type="button"
                     onClick={prevMonth}
-                    aria-label="Previous month"
+                    aria-label={t('datetime.previousMonth')}
                     className="p-1 hover:bg-gray-100 rounded-lg focus:outline-none"
                   >
                     <svg
@@ -485,7 +496,7 @@ export default function DateTimeField({ config }: Props): JSX.Element {
                   <button
                     type="button"
                     onClick={nextMonth}
-                    aria-label="Next month"
+                    aria-label={t('datetime.nextMonth')}
                     className="p-1 hover:bg-gray-100 rounded-lg focus:outline-none"
                   >
                     <svg
@@ -517,7 +528,7 @@ export default function DateTimeField({ config }: Props): JSX.Element {
                 </div>
 
                 {/* Calendar grid */}
-                <div className="grid grid-cols-7 gap-0" role="grid" aria-label="Calendar">
+                <div className="grid grid-cols-7 gap-0" role="grid" aria-label={t('a11y.calendar')}>
                   {calendarDays.map((date, index) => (
                     <div key={index} role="gridcell" className="flex items-center justify-center">
                       {date ? (
@@ -563,7 +574,7 @@ export default function DateTimeField({ config }: Props): JSX.Element {
                       focus:outline-none focus:ring-2 focus:ring-blue-500
                     "
                   >
-                    Today
+                    {t('datetime.today')}
                   </button>
                 </div>
               </div>
@@ -586,17 +597,19 @@ export default function DateTimeField({ config }: Props): JSX.Element {
                 <div className="flex gap-3 justify-center">
                   {/* Hours column */}
                   <div className="flex flex-1 flex-col p-2 border border-gray-200 rounded-md">
-                    <span className="text-sm font-medium text-center mb-1">Hour</span>
+                    <span className="text-sm font-medium text-center mb-1">
+                      {t('datetime.hour')}
+                    </span>
                     <ul
                       ref={hourListRef}
                       role="listbox"
-                      aria-label="Hour"
+                      aria-label={t('datetime.hour')}
                       className="h-40 overflow-auto py-1 scrollbar-none"
                       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                     >
                       {hourOptions.map((h) => {
                         const displayHour = h % 12 || 12;
-                        const ampm = h >= 12 ? 'PM' : 'AM';
+                        const ampm = h >= 12 ? translations.datetime.pm : translations.datetime.am;
                         return (
                           <li
                             key={h}
@@ -618,11 +631,13 @@ export default function DateTimeField({ config }: Props): JSX.Element {
 
                   {/* Minutes column */}
                   <div className="flex flex-1 flex-col p-2 border border-gray-200 rounded-md">
-                    <span className="text-sm font-medium text-center mb-1">Min</span>
+                    <span className="text-sm font-medium text-center mb-1">
+                      {t('datetime.minute')}
+                    </span>
                     <ul
                       ref={minuteListRef}
                       role="listbox"
-                      aria-label="Minute"
+                      aria-label={t('datetime.minute')}
                       className="h-40 overflow-auto py-1 scrollbar-none"
                       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                     >
@@ -663,7 +678,7 @@ export default function DateTimeField({ config }: Props): JSX.Element {
                   }
                 `}
               >
-                Confirm
+                {t('form.confirm')}
               </button>
             </div>
           </div>

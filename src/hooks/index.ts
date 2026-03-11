@@ -26,3 +26,6 @@ export {
   type UseAsyncValidationReturn,
   type AsyncValidatorFn,
 } from './useAsyncValidation';
+
+// Internationalization hook
+export { useI18n, type I18nContextValue } from './useI18n';

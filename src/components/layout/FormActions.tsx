@@ -3,6 +3,7 @@
  */
 
 import type { JSX } from 'react';
+import { useI18n } from '../../hooks/useI18n';
 
 /**
  * Props for FormActions
@@ -29,7 +30,7 @@ type Props = {
  * Handles loading state and wizard navigation
  */
 export default function FormActions({
-  submitLabel = 'Submit',
+  submitLabel,
   resetLabel,
   prevLabel,
   isSubmitting = false,
@@ -37,6 +38,9 @@ export default function FormActions({
   onPrev,
   className = '',
 }: Props): JSX.Element {
+  const { t } = useI18n();
+  const finalSubmitLabel = submitLabel ?? t('form.submit');
+
   return (
     <div className={`formkit-form-actions flex gap-3 mt-6 ${className}`.trim()}>
       {/* Previous button (wizard mode) */}
@@ -118,10 +122,10 @@ export default function FormActions({
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-            Submitting...
+            {t('form.submitting')}
           </span>
         ) : (
-          submitLabel
+          finalSubmitLabel
         )}
       </button>
     </div>

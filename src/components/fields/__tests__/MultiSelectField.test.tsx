@@ -115,12 +115,12 @@ describe('MultiSelectField', () => {
     const user = userEvent.setup();
     renderMultiSelectField({}, ['apple', 'banana', 'cherry']);
 
-    const clearButton = screen.getByRole('button', { name: 'Clear all selections' });
+    const clearButton = screen.getByRole('button', { name: 'Clear selection' });
     await user.click(clearButton);
 
     // All tags should be removed
     expect(screen.queryByRole('button', { name: /Remove/i })).not.toBeInTheDocument();
-    expect(screen.getByText('Select options...')).toBeInTheDocument();
+    expect(screen.getByText('Select an option...')).toBeInTheDocument();
   });
 
   it('filters options via search', async () => {

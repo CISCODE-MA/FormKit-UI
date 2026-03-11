@@ -5,6 +5,7 @@
 
 import type { JSX } from 'react';
 import type { StepConfig } from '../../models/StepConfig';
+import { useI18n } from '../../hooks/useI18n';
 
 /**
  * Props for FormStepper
@@ -25,8 +26,10 @@ type Props = {
  * @internal
  */
 export default function FormStepper({ steps, currentStep, onStepClick }: Props): JSX.Element {
+  const { t } = useI18n();
+
   return (
-    <nav className="formkit-stepper" aria-label="Form progress">
+    <nav className="formkit-stepper" aria-label={t('a11y.formSteps')}>
       <ol className="flex items-center gap-2" role="list">
         {steps.map((step, index) => {
           const isActive = index === currentStep;
@@ -59,7 +62,7 @@ export default function FormStepper({ steps, currentStep, onStepClick }: Props):
                 onClick={() => isClickable && onStepClick(index)}
                 disabled={!isClickable}
                 aria-current={isActive ? 'step' : undefined}
-                aria-label={`Step ${index + 1}: ${step.title}${isCompleted ? ' (completed)' : ''}${isActive ? ' (current)' : ''}`}
+                aria-label={`${t('a11y.stepNumber')} ${index + 1}: ${step.title}${isCompleted ? ` (${t('a11y.stepCompleted')})` : ''}${isActive ? ` (${t('a11y.stepCurrent')})` : ''}`}
               >
                 {isCompleted ? (
                   <svg

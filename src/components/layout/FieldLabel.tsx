@@ -3,6 +3,7 @@
  */
 
 import type { JSX } from 'react';
+import { useI18n } from '../../hooks/useI18n';
 
 /**
  * Props for FieldLabel
@@ -31,6 +32,7 @@ export default function FieldLabel({
   as = 'label',
   className = '',
 }: Props): JSX.Element {
+  const { t } = useI18n();
   const classes = `formkit-field-label text-sm font-medium text-gray-700 ${className}`.trim();
 
   if (as === 'legend') {
@@ -38,7 +40,7 @@ export default function FieldLabel({
       <legend className={classes}>
         {label}
         {required && (
-          <span className="text-red-500 ml-1" aria-label="required">
+          <span className="text-red-500 ml-1" aria-label={t('a11y.required')}>
             *
           </span>
         )}
@@ -50,7 +52,7 @@ export default function FieldLabel({
     <label htmlFor={htmlFor} className={classes}>
       {label}
       {required && (
-        <span className="text-red-500 ml-1" aria-label="required">
+        <span className="text-red-500 ml-1" aria-label={t('a11y.required')}>
           *
         </span>
       )}

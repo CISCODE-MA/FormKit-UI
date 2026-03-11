@@ -52,7 +52,7 @@ describe('TimeField', () => {
 
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(screen.getByText('Hour')).toBeInTheDocument();
-    expect(screen.getByText('Min')).toBeInTheDocument();
+    expect(screen.getByText('Minute')).toBeInTheDocument();
   });
 
   it('selects time via dropdown', async () => {

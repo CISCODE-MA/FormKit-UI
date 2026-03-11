@@ -7,6 +7,7 @@ import { useCallback, useMemo } from 'react';
 import type { FieldConfig } from '../../models/FieldConfig';
 import type { FieldValue } from '../../core/types';
 import { useFormKitContext } from '../context/FormKitContext';
+import { useI18n } from '../../hooks/useI18n';
 import FieldLabel from '../layout/FieldLabel';
 import FieldError from '../layout/FieldError';
 
@@ -23,6 +24,7 @@ type Props = {
  */
 export default function ArrayField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getValues } = useFormKitContext();
+  const { t } = useI18n();
 
   const fieldId = `field-${config.key}`;
   const errorId = `${fieldId}-error`;
@@ -45,8 +47,8 @@ export default function ArrayField({ config }: Props): JSX.Element {
   const canRemove = rows.length > minRows && !isDisabled;
 
   // Labels
-  const addLabel = config.addLabel ?? 'Add';
-  const removeLabel = config.removeLabel ?? 'Remove';
+  const addLabel = config.addLabel ?? t('field.add');
+  const removeLabel = config.removeLabel ?? t('field.remove');
 
   // Add a new row
   const handleAdd = useCallback(() => {

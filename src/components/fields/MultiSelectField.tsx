@@ -5,6 +5,7 @@
 import { useState, useRef, useEffect, type JSX, type KeyboardEvent } from 'react';
 import type { FieldConfig } from '../../models/FieldConfig';
 import { useFormKitContext } from '../context/FormKitContext';
+import { useI18n } from '../../hooks/useI18n';
 import FieldLabel from '../layout/FieldLabel';
 import FieldError from '../layout/FieldError';
 
@@ -22,6 +23,7 @@ type Props = {
  */
 export default function MultiSelectField({ config }: Props): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
+  const { t } = useI18n();
 
   const fieldId = `field-${config.key}`;
   const errorId = `${fieldId}-error`;
@@ -279,7 +281,7 @@ export default function MultiSelectField({ config }: Props): JSX.Element {
                 </span>
               ))
             ) : (
-              <span className="text-gray-400">{config.placeholder ?? 'Select options...'}</span>
+              <span className="text-gray-400">{config.placeholder ?? t('field.selectOption')}</span>
             )}
 
             {/* Spacer and controls */}
@@ -293,7 +295,7 @@ export default function MultiSelectField({ config }: Props): JSX.Element {
                   e.stopPropagation();
                   clearAll();
                 }}
-                aria-label="Clear all selections"
+                aria-label={t('field.clearSelection')}
                 className="
                   p-1 text-gray-400 hover:text-gray-600
                   focus:outline-none focus:ring-1 focus:ring-blue-500 rounded
@@ -371,8 +373,8 @@ export default function MultiSelectField({ config }: Props): JSX.Element {
                     toggleOption(filteredOptions[focusedIndex].value);
                   }
                 }}
-                placeholder="Search..."
-                aria-label="Search options"
+                placeholder={t('field.search')}
+                aria-label={t('field.search')}
                 className="
                   w-full px-3 py-1.5
                   text-sm
@@ -394,7 +396,9 @@ export default function MultiSelectField({ config }: Props): JSX.Element {
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {filteredOptions.length === 0 ? (
-                <li className="px-3 py-2 text-sm text-gray-500 text-center">No options found</li>
+                <li className="px-3 py-2 text-sm text-gray-500 text-center">
+                  {t('field.noOptionsFound')}
+                </li>
               ) : (
                 filteredOptions.map((option, index) => {
                   const isSelected = selectedValues.includes(option.value);
@@ -460,7 +464,7 @@ export default function MultiSelectField({ config }: Props): JSX.Element {
             {/* Selection count */}
             {selectedValues.length > 0 && (
               <div className="px-3 py-2 border-t border-gray-200 text-xs text-gray-500">
-                {selectedValues.length} selected
+                {selectedValues.length} {t('field.selected')}
               </div>
             )}
           </div>
