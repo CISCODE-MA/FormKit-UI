@@ -161,7 +161,7 @@ export default function FileField({ config }: Props): JSX.Element {
             file:text-sm file:font-medium
             file:bg-blue-50 file:text-blue-700
             hover:file:bg-blue-100
-            focus:outline-none focus:ring-2 focus:ring-blue-500
+            focus:outline-none focus:ring-2 ${showError ? 'focus:ring-red-500' : 'focus:ring-blue-500'}
             ${showError ? 'border-red-500' : 'border-gray-300'}
             ${isDisabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
           `}

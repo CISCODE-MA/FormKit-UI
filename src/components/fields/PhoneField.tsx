@@ -153,7 +153,7 @@ export default function PhoneField({ config }: Props): JSX.Element {
               text-sm sm:text-base
               border border-r-0 rounded-l-md
               transition-all duration-150
-              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10
+              focus:outline-none focus:ring-2 ${showError ? 'focus:ring-red-500' : 'focus:ring-blue-500'} focus:z-10
               ${
                 showError
                   ? 'border-red-500 hover:border-red-400'

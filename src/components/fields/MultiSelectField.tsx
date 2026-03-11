@@ -225,10 +225,10 @@ export default function MultiSelectField({ config }: Props): JSX.Element {
             border rounded-lg
             cursor-pointer
             transition-colors duration-150
-            focus:outline-none focus:ring-2 focus:ring-blue-500
+            focus:outline-none focus:ring-2 ${showError ? 'focus:ring-red-500' : 'focus:ring-blue-500'}
             ${showError ? 'border-red-500 hover:border-red-400' : 'border-gray-300 hover:border-gray-400'}
             ${isDisabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
-            ${isOpen ? 'ring-2 ring-blue-500 border-blue-500' : ''}
+            ${isOpen ? (showError ? 'ring-2 ring-red-500 border-red-500' : 'ring-2 ring-blue-500 border-blue-500') : ''}
           `}
         >
           <div className="flex flex-wrap items-center gap-1.5">

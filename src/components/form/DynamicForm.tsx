@@ -17,6 +17,33 @@ import Field from '../fields/Field';
 import FormActions from '../layout/FormActions';
 
 /**
+ * Scrolls to the first field with an error after validation fails.
+ * Uses requestAnimationFrame + setTimeout to ensure DOM is updated after state changes.
+ */
+function scrollToFirstError(fieldKeys: string[]): void {
+  // Wait for React to flush state updates and render error elements
+  requestAnimationFrame(() => {
+    // Additional delay to ensure DOM is fully updated
+    setTimeout(() => {
+      for (const key of fieldKeys) {
+        const fieldElement = document.getElementById(`field-${key}`);
+        if (fieldElement) {
+          // Check if scrollIntoView is available (not in jsdom test environment)
+          if (typeof fieldElement.scrollIntoView === 'function') {
+            fieldElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          // Focus the field for accessibility
+          if (typeof fieldElement.focus === 'function') {
+            fieldElement.focus({ preventScroll: true });
+          }
+          break;
+        }
+      }
+    }, 50);
+  });
+}
+
+/**
  * Props for DynamicForm component
  *
  * @example — Single page form
@@ -164,7 +191,10 @@ function DynamicFormInner<TValues extends FormValues = FormValues>({
   // ── Determine mode (single-page vs wizard) ────────────────────
   const isWizardMode = !!steps && steps.length > 0;
   const resolvedSchema = isWizardMode ? steps[currentStep]?.schema : schema;
-  const resolvedFields = isWizardMode ? (steps[currentStep]?.fields ?? []) : (fields ?? []);
+  const resolvedFields = useMemo(
+    () => (isWizardMode ? (steps?.[currentStep]?.fields ?? []) : (fields ?? [])),
+    [isWizardMode, steps, currentStep, fields],
+  );
 
   // ── Form context value ────────────────────────────────────────
   const contextValue = useMemo(
@@ -229,6 +259,13 @@ function DynamicFormInner<TValues extends FormValues = FormValues>({
             touchedFields[key as keyof TValues] = true;
           });
           setTouched((prev) => ({ ...prev, ...touchedFields }));
+
+          // Scroll to first field with error (in field order)
+          const errorKeys = resolvedFields.map((f) => f.key).filter((key) => key in fieldErrors);
+          if (errorKeys.length > 0) {
+            scrollToFirstError(errorKeys);
+          }
+
           onError?.(fieldErrors);
           return;
         }
@@ -263,6 +300,7 @@ function DynamicFormInner<TValues extends FormValues = FormValues>({
       currentStep,
       resetOnSubmit,
       defaultValues,
+      resolvedFields,
     ],
   );
 
