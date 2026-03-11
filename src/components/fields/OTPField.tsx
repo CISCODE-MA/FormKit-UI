@@ -146,7 +146,7 @@ export default function OTPField({ config }: Props): JSX.Element {
       <FieldLabel htmlFor={`${fieldId}-0`} label={config.label} required={config.required} />
 
       <div
-        className="flex gap-2 sm:gap-3"
+        className="flex gap-1.5 sm:gap-2 w-full"
         role="group"
         aria-label={`${config.label} - ${length} digit code`}
       >
@@ -180,8 +180,9 @@ export default function OTPField({ config }: Props): JSX.Element {
             }}
             className={`
               formkit-otp-input
-              w-10 h-12 sm:w-12 sm:h-14
-              text-center text-xl sm:text-2xl font-semibold
+              flex-1 min-w-0 max-w-12 sm:max-w-14
+              aspect-square sm:aspect-auto sm:h-14
+              text-center text-lg sm:text-2xl font-semibold
               border-2 rounded-lg
               transition-all duration-150
               focus:outline-none
