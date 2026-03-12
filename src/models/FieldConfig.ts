@@ -87,8 +87,6 @@ export interface FieldConfig<TValue = unknown> {
   readonly minRows?: number;
   /** Maximum number of rows */
   readonly maxRows?: number;
-  /** Allow row reordering via up/down buttons (default: true) */
-  readonly allowReorder?: boolean;
   /** Make rows collapsible (default: false) */
   readonly collapsible?: boolean;
   /** Require confirmation before removing a row (default: false) */
