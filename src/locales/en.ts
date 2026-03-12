@@ -30,6 +30,8 @@ const en: TranslationKeys = {
     selected: 'selected',
     typeAndEnter: 'Type and press Enter',
     phoneNumber: 'Phone number',
+    yes: 'Yes',
+    no: 'No',
   },
 
   // Accessibility
@@ -135,6 +137,24 @@ const en: TranslationKeys = {
     addTag: 'Add tag',
     removeTag: 'Remove tag',
     maxTags: 'Maximum tags reached',
+  },
+
+  // Array field
+  array: {
+    empty: 'No items yet. Add your first one!',
+    row: 'Item',
+    rowAdded: 'Item added',
+    rowRemoved: 'Item removed',
+    moveUp: 'Move up row',
+    moveDown: 'Move down row',
+    rowMovedUp: 'Item moved up',
+    rowMovedDown: 'Item moved down',
+    expand: 'Expand row',
+    collapse: 'Collapse row',
+    confirmRemove: 'Remove?',
+    minHint: 'At least {min} required',
+    maxHint: 'Maximum {max} allowed',
+    minMaxHint: 'Between {min} and {max} items',
   },
 };
 

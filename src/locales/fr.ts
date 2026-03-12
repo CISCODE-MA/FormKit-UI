@@ -30,6 +30,8 @@ const fr: TranslationKeys = {
     selected: 'sélectionné(s)',
     typeAndEnter: 'Tapez et appuyez sur Entrée',
     phoneNumber: 'Numéro de téléphone',
+    yes: 'Oui',
+    no: 'Non',
   },
 
   // Accessibility
@@ -136,6 +138,23 @@ const fr: TranslationKeys = {
     removeTag: 'Supprimer le tag',
     maxTags: 'Nombre maximum de tags atteint',
   },
-};
 
+  // Array field
+  array: {
+    empty: 'Aucun élément. Ajoutez le premier !',
+    row: 'Élément',
+    rowAdded: 'Élément ajouté',
+    rowRemoved: 'Élément supprimé',
+    moveUp: 'Déplacer vers le haut la ligne',
+    moveDown: 'Déplacer vers le bas la ligne',
+    rowMovedUp: 'Élément déplacé vers le haut',
+    rowMovedDown: 'Élément déplacé vers le bas',
+    expand: 'Développer la ligne',
+    collapse: 'Réduire la ligne',
+    confirmRemove: 'Supprimer ?',
+    minHint: 'Au moins {min} requis',
+    maxHint: 'Maximum {max} autorisés',
+    minMaxHint: 'Entre {min} et {max} éléments',
+  },
+};
 export default fr;

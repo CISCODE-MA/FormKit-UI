@@ -22,8 +22,8 @@ const translations: Record<Locale, TranslationKeys> = {
 export interface I18nContextValue {
   /** Current locale */
   locale: Locale;
-  /** Get translation by key path */
-  t: (path: string, fallback?: string) => string;
+  /** Get translation by key path with optional parameter interpolation */
+  t: (path: string, params?: Record<string, string | number>, fallback?: string) => string;
   /** Full translations object for current locale */
   translations: TranslationKeys;
 }
@@ -33,8 +33,8 @@ export interface I18nContextValue {
  */
 const defaultContextValue: I18nContextValue = {
   locale: DEFAULT_LOCALE,
-  t: (path: string, fallback?: string) =>
-    getTranslation(translations[DEFAULT_LOCALE], path, fallback),
+  t: (path: string, params?: Record<string, string | number>, fallback?: string) =>
+    getTranslation(translations[DEFAULT_LOCALE], path, params, fallback),
   translations: translations[DEFAULT_LOCALE],
 };
 
@@ -83,7 +83,8 @@ export default function I18nProvider({
 
     return {
       locale,
-      t: (path: string, fallback?: string) => getTranslation(mergedTranslations, path, fallback),
+      t: (path: string, params?: Record<string, string | number>, fallback?: string) =>
+        getTranslation(mergedTranslations, path, params, fallback),
       translations: mergedTranslations,
     };
   }, [locale, customTranslations]);

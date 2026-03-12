@@ -42,6 +42,8 @@ export interface TranslationKeys {
     selected: string;
     typeAndEnter: string;
     phoneNumber: string;
+    yes: string;
+    no: string;
   };
 
   // Accessibility
@@ -148,17 +150,37 @@ export interface TranslationKeys {
     removeTag: string;
     maxTags: string;
   };
+
+  // Array field
+  array: {
+    empty: string;
+    row: string;
+    rowAdded: string;
+    rowRemoved: string;
+    moveUp: string;
+    moveDown: string;
+    rowMovedUp: string;
+    rowMovedDown: string;
+    expand: string;
+    collapse: string;
+    confirmRemove: string;
+    minHint: string;
+    maxHint: string;
+    minMaxHint: string;
+  };
 }
 
 /**
  * Get a nested translation value by dot-notation path
  * @param translations - Translation object
  * @param path - Dot-notation path (e.g., 'form.submit')
+ * @param params - Optional parameters to interpolate (e.g., { min: 1, max: 5 })
  * @param fallback - Fallback value if path not found
  */
 export function getTranslation(
   translations: TranslationKeys,
   path: string,
+  params?: Record<string, string | number>,
   fallback?: string,
 ): string {
   const keys = path.split('.');
@@ -172,5 +194,14 @@ export function getTranslation(
     }
   }
 
-  return typeof current === 'string' ? current : (fallback ?? path);
+  let result = typeof current === 'string' ? current : (fallback ?? path);
+
+  // Interpolate parameters like {min}, {max}
+  if (params) {
+    for (const [key, value] of Object.entries(params)) {
+      result = result.replace(new RegExp(`\\{${key}\\}`, 'g'), String(value));
+    }
+  }
+
+  return result;
 }
