@@ -42,7 +42,7 @@ type ArrayRowProviderProps = {
 /**
  * Provides a scoped FormKitContext for each array row
  * This allows nested Field components to use the existing field implementations
- * Each nested field handles its own validation independently
+ * Routes validation errors from parent context using path notation (e.g., contacts.0.email)
  */
 function ArrayRowProvider({
   rowData,
@@ -54,29 +54,48 @@ function ArrayRowProvider({
 }: Omit<ArrayRowProviderProps, 'hasError'>): JSX.Element {
   const parentContext = useFormKitContext();
 
-  // Track touched state per field within this row
-  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+  // Track touched state per field within this row (local state for immediate feedback)
+  const [localTouched, setLocalTouched] = useState<Set<string>>(new Set());
 
   // Create a scoped context value for this row
-  // Each nested field handles its own validation - no parent error propagation
+  // Routes errors from parent context using path notation: arrayKey.rowIndex.fieldKey
   const scopedContext = useMemo<FormContextValue>(() => {
     return {
       getValue: (key) => rowData[key as string] ?? '',
       setValue: (key, value) => onFieldChange(rowIndex, key as string, value),
-      getError: () => null, // Each field validates itself via its own schema
-      setError: () => {}, // No-op - validation handled by field's own schema
-      getTouched: (key) => touchedFields.has(key as string),
+      // Route error lookups to parent with full path (e.g., contacts.0.email)
+      getError: (key) => {
+        const fullPath = `${arrayKey}.${rowIndex}.${key as string}`;
+        return parentContext.getError(fullPath as keyof FormValues);
+      },
+      // Route error setting to parent with full path
+      setError: (key, error) => {
+        const fullPath = `${arrayKey}.${rowIndex}.${key as string}`;
+        parentContext.setError(fullPath as keyof FormValues, error);
+      },
+      // Check both local touched state and parent touched state
+      getTouched: (key) => {
+        const fullPath = `${arrayKey}.${rowIndex}.${key as string}`;
+        return (
+          localTouched.has(key as string) || parentContext.getTouched(fullPath as keyof FormValues)
+        );
+      },
+      // Set touched in both local state (for immediate feedback) and parent context
       setTouched: (key, touched) => {
         if (touched) {
-          setTouchedFields((prev) => new Set(prev).add(key as string));
+          setLocalTouched((prev) => new Set(prev).add(key as string));
+          // Also set touched in parent with full path
+          const fullPath = `${arrayKey}.${rowIndex}.${key as string}`;
+          parentContext.setTouched(fullPath as keyof FormValues, true);
         }
-        parentContext.setTouched(arrayKey, true);
+        // Mark the array itself as touched
+        parentContext.setTouched(arrayKey as keyof FormValues, true);
       },
       getValues: () => rowData as FormValues,
       isSubmitting: parentContext.isSubmitting,
       isValid: true, // Individual fields determine their own validity
     };
-  }, [rowData, rowIndex, arrayKey, onFieldChange, touchedFields, parentContext]);
+  }, [rowData, rowIndex, arrayKey, onFieldChange, localTouched, parentContext]);
 
   // If parent is disabled, provide a context that reports disabled
   const finalContext = useMemo<FormContextValue>(() => {
