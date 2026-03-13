@@ -7,13 +7,17 @@ import { type JSX, type FormEvent, useState, useCallback, useMemo } from 'react'
 import type { z } from 'zod';
 import type { FieldConfig } from '../../models/FieldConfig';
 import type { StepConfig } from '../../models/StepConfig';
+import type { FormLayoutItem, ColumnCount } from '../../models/SectionConfig';
+import { isSection } from '../../models/SectionConfig';
 import type { FormValues, ValidationMode, FieldValue } from '../../core/types';
 import type { Locale, TranslationKeys } from '../../core/i18n';
 import type { FieldErrors } from '../../core/validator';
+import { getGridContainerClass, getColSpanClass } from '../../core/grid';
 import FormKitProvider from '../context/FormKitContext';
 import I18nProvider from '../context/I18nContext';
 import { useI18n } from '../../hooks/useI18n';
 import Field from '../fields/Field';
+import FormSection from '../layout/FormSection';
 import FormActions from '../layout/FormActions';
 
 /**
@@ -65,8 +69,33 @@ export interface DynamicFormProps<TValues extends FormValues = FormValues> {
   // ── Core ────────────────────────────────────────────────────
   /** Zod schema for single-page mode (omit when using `steps`) */
   schema?: z.ZodType<TValues>;
-  /** Field configuration array for single-page mode (omit when using `steps`) */
+  /**
+   * Field configuration array for single-page mode (omit when using `steps`).
+   * For advanced layouts, use `layout` instead.
+   */
   fields?: FieldConfig[];
+  /**
+   * Layout configuration with sections and fields.
+   * Supports grouping fields into sections with independent grid configs.
+   * Takes precedence over `fields` when both are provided.
+   *
+   * @example
+   * ```tsx
+   * layout={[
+   *   {
+   *     type: 'section',
+   *     title: 'Personal Info',
+   *     columns: { default: 1, md: 2 },
+   *     fields: [
+   *       { key: 'firstName', type: FieldType.TEXT, colSpan: 1 },
+   *       { key: 'lastName', type: FieldType.TEXT, colSpan: 1 },
+   *     ]
+   *   },
+   *   { key: 'notes', type: FieldType.TEXTAREA }, // standalone field
+   * ]}
+   * ```
+   */
+  layout?: FormLayoutItem[];
   /** Step configuration array for wizard mode (replaces `schema` + `fields`) */
   steps?: StepConfig[];
   /** Initial field values */
@@ -99,8 +128,18 @@ export interface DynamicFormProps<TValues extends FormValues = FormValues> {
   // ── Layout ──────────────────────────────────────────────────
   /** Show step indicator in wizard mode (default: true) */
   showStepper?: boolean;
-  /** Grid columns for field layout (default: 1) */
-  columns?: 1 | 2 | 3 | 4;
+  /**
+   * Grid columns for field layout.
+   * Can be a number (1-12) or responsive config.
+   * Individual sections can override this.
+   * @default 1
+   *
+   * @example Simple: `columns={2}`
+   * @example Responsive: `columns={{ default: 1, md: 2, lg: 3 }}`
+   */
+  columns?: ColumnCount;
+  /** Gap between fields (Tailwind scale: 1-8, default: 4) */
+  gap?: 1 | 2 | 3 | 4 | 5 | 6 | 8;
   /** Custom CSS class */
   className?: string;
 
@@ -120,6 +159,7 @@ export interface DynamicFormProps<TValues extends FormValues = FormValues> {
 export default function DynamicForm<TValues extends FormValues = FormValues>({
   schema,
   fields,
+  layout,
   steps,
   defaultValues,
   onSubmit,
@@ -133,6 +173,7 @@ export default function DynamicForm<TValues extends FormValues = FormValues>({
   prevLabel,
   showStepper = true,
   columns = 1,
+  gap = 4,
   className = '',
   locale = 'en',
   customTranslations,
@@ -142,6 +183,7 @@ export default function DynamicForm<TValues extends FormValues = FormValues>({
       <DynamicFormInner
         schema={schema}
         fields={fields}
+        layout={layout}
         steps={steps}
         defaultValues={defaultValues}
         onSubmit={onSubmit}
@@ -154,6 +196,7 @@ export default function DynamicForm<TValues extends FormValues = FormValues>({
         prevLabel={prevLabel}
         showStepper={showStepper}
         columns={columns}
+        gap={gap}
         className={className}
       />
     </I18nProvider>
@@ -166,6 +209,7 @@ export default function DynamicForm<TValues extends FormValues = FormValues>({
 function DynamicFormInner<TValues extends FormValues = FormValues>({
   schema,
   fields,
+  layout,
   steps,
   defaultValues,
   onSubmit,
@@ -178,6 +222,7 @@ function DynamicFormInner<TValues extends FormValues = FormValues>({
   prevLabel,
   showStepper = true,
   columns = 1,
+  gap = 4,
   className = '',
 }: Omit<DynamicFormProps<TValues>, 'locale' | 'customTranslations'>): JSX.Element {
   const { t } = useI18n();
@@ -191,10 +236,30 @@ function DynamicFormInner<TValues extends FormValues = FormValues>({
   // ── Determine mode (single-page vs wizard) ────────────────────
   const isWizardMode = !!steps && steps.length > 0;
   const resolvedSchema = isWizardMode ? steps[currentStep]?.schema : schema;
-  const resolvedFields = useMemo(
-    () => (isWizardMode ? (steps?.[currentStep]?.fields ?? []) : (fields ?? [])),
-    [isWizardMode, steps, currentStep, fields],
-  );
+
+  // Resolve layout items: layout > fields > step fields
+  const resolvedLayoutItems = useMemo<FormLayoutItem[]>(() => {
+    if (isWizardMode) {
+      return steps?.[currentStep]?.fields ?? [];
+    }
+    if (layout && layout.length > 0) {
+      return layout;
+    }
+    return fields ?? [];
+  }, [isWizardMode, steps, currentStep, layout, fields]);
+
+  // Extract flat list of field configs for validation (needed for error scrolling)
+  const resolvedFields = useMemo<FieldConfig[]>(() => {
+    const flatFields: FieldConfig[] = [];
+    for (const item of resolvedLayoutItems) {
+      if (isSection(item)) {
+        flatFields.push(...item.fields);
+      } else {
+        flatFields.push(item);
+      }
+    }
+    return flatFields;
+  }, [resolvedLayoutItems]);
 
   // ── Form context value ────────────────────────────────────────
   const contextValue = useMemo(
@@ -320,7 +385,10 @@ function DynamicFormInner<TValues extends FormValues = FormValues>({
   }, [currentStep]);
 
   // ── Grid class ────────────────────────────────────────────────
-  const gridClass = columns > 1 ? `grid grid-cols-${columns} gap-4` : 'flex flex-col gap-4';
+  const gridClass = getGridContainerClass(columns, gap);
+
+  // Check if we have any sections (to determine if we need a wrapper grid)
+  const hasSections = resolvedLayoutItems.some(isSection);
 
   // ── Resolved labels with i18n ────────────────────────────────
   const resolvedSubmitLabel = submitLabel ?? t('form.submit');
@@ -349,12 +417,38 @@ function DynamicFormInner<TValues extends FormValues = FormValues>({
           </div>
         )}
 
-        {/* Fields */}
-        <div className={gridClass}>
-          {resolvedFields.map((field) => (
-            <Field key={field.key} config={field} />
-          ))}
-        </div>
+        {/* Fields and Sections */}
+        {hasSections ? (
+          // Layout with sections: render sections and standalone fields in a flex column
+          <div className="flex flex-col gap-6">
+            {resolvedLayoutItems.map((item, index) => {
+              if (isSection(item)) {
+                return <FormSection key={item.id ?? `section-${index}`} config={item} />;
+              }
+              // Standalone field outside a section
+              const colSpanClass = getColSpanClass(item.colSpan);
+              return (
+                <div key={item.key} className={colSpanClass}>
+                  <Field config={item} />
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          // Simple grid layout without sections
+          <div className={gridClass}>
+            {resolvedLayoutItems.map((item) => {
+              // All items are fields in this branch
+              const field = item as FieldConfig;
+              const colSpanClass = getColSpanClass(field.colSpan);
+              return (
+                <div key={field.key} className={colSpanClass}>
+                  <Field config={field} />
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Actions */}
         <FormActions

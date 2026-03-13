@@ -245,6 +245,7 @@ export default function PhoneField({ config }: Props): JSX.Element {
           onBlur={() => setTouched(config.key, true)}
           className={`
             formkit-phone-input
+            formkit-field
             flex-1 px-3 py-2 sm:px-4 sm:py-2.5
             text-sm sm:text-base
             border rounded-r-md

@@ -4,6 +4,7 @@
  */
 
 import type { FieldType, ConditionalRule, FieldValue } from '../core/types';
+import type { ColSpanValue } from './SectionConfig';
 
 /**
  * Option for select, radio, or multi-select fields
@@ -135,8 +136,14 @@ export interface FieldConfig<TValue = unknown> {
   readonly timeStep?: number;
 
   // ── Layout ────────────────────────────────────────────────────
-  /** Column span in grid layout */
-  readonly colSpan?: 1 | 2 | 3 | 4;
+  /**
+   * Column span in grid layout.
+   * Can be a number (1-12) or responsive object for different breakpoints.
+   *
+   * @example Simple: `colSpan: 6` (half width in 12-column grid)
+   * @example Responsive: `colSpan: { default: 12, md: 6, lg: 4 }`
+   */
+  readonly colSpan?: ColSpanValue;
   /** Custom CSS class */
   readonly className?: string;
 }

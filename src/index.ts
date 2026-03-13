@@ -5,6 +5,15 @@ export { default as DynamicForm } from './components/form/DynamicForm';
 export type { DynamicFormProps } from './components/form/DynamicForm';
 export type { FieldConfig, FieldOption } from './models/FieldConfig';
 export type { StepConfig } from './models/StepConfig';
+export type {
+  SectionConfig,
+  FormLayoutItem,
+  ResponsiveColumns,
+  ResponsiveColSpan,
+  ColumnCount,
+  ColSpanValue,
+} from './models/SectionConfig';
+export { isSection, isField } from './models/SectionConfig';
 export type { FormState, FieldState, FormContextValue } from './models/FormState';
 export type {
   ValidationRule,
