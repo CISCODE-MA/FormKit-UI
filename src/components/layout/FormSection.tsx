@@ -34,7 +34,7 @@ type Props = {
  * }} />
  * ```
  */
-export default function FormSection({ config }: Props): JSX.Element {
+export default function FormSection({ config }: Readonly<Props>): JSX.Element {
   const { title, description, columns = 1, gap = 4, fields, className = '', bordered } = config;
 
   // Determine if we should show a border (default true when title present)

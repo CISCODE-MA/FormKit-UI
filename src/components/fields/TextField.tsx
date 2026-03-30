@@ -20,7 +20,7 @@ type Props = {
  * TextField component for text, email, password, and number inputs
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export default function TextField({ config }: Props): JSX.Element {
+export default function TextField({ config }: Readonly<Props>): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
 
   const fieldId = `field-${config.key}`;
@@ -55,6 +55,8 @@ export default function TextField({ config }: Props): JSX.Element {
     [showError ? errorId : null, config.description ? descId : null].filter(Boolean).join(' ') ||
     undefined;
 
+  const inputValue = typeof value === 'string' || typeof value === 'number' ? String(value) : '';
+
   return (
     <div className="formkit-text-field flex flex-col gap-1">
       <FieldLabel htmlFor={fieldId} label={config.label} required={config.required} />
@@ -69,7 +71,7 @@ export default function TextField({ config }: Props): JSX.Element {
         id={fieldId}
         name={config.key}
         type={inputType()}
-        value={String(value ?? '')}
+        value={inputValue}
         placeholder={config.placeholder}
         disabled={isDisabled}
         readOnly={config.readOnly}

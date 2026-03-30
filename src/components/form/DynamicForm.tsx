@@ -401,7 +401,7 @@ function DynamicFormInner<TValues extends FormValues = FormValues>({
       <form className={`formkit-dynamic-form ${className}`} onSubmit={handleSubmit} noValidate>
         {/* Stepper (wizard mode) */}
         {isWizardMode && showStepper && steps && (
-          <div className="formkit-stepper mb-6" role="navigation" aria-label={t('a11y.formSteps')}>
+          <nav className="formkit-stepper mb-6" aria-label={t('a11y.formSteps')}>
             <ol className="flex gap-2">
               {steps.map((step, index) => (
                 <li
@@ -414,7 +414,7 @@ function DynamicFormInner<TValues extends FormValues = FormValues>({
                 </li>
               ))}
             </ol>
-          </div>
+          </nav>
         )}
 
         {/* Fields and Sections */}

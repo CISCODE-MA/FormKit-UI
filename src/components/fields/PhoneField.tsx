@@ -76,7 +76,7 @@ function parsePhoneValue(value: unknown): PhoneValue {
  * PhoneField component for phone number input with country selection
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export default function PhoneField({ config }: Props): JSX.Element {
+export default function PhoneField({ config }: Readonly<Props>): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
   const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
@@ -105,6 +105,16 @@ export default function PhoneField({ config }: Props): JSX.Element {
   const describedBy =
     [showError ? errorId : null, config.description ? descId : null].filter(Boolean).join(' ') ||
     undefined;
+
+  const phoneBorderClass = showError
+    ? 'border-red-500 focus:ring-red-500 focus:border-red-500 hover:border-red-400'
+    : showSuccess
+      ? 'border-green-500 focus:ring-green-500 focus:border-green-500 hover:border-green-400'
+      : 'border-gray-300 focus:ring-blue-500 hover:border-gray-400';
+
+  const phoneDisabledClass = isDisabled
+    ? 'bg-gray-100 text-gray-500 cursor-not-allowed hover:border-gray-300'
+    : 'bg-white';
 
   // Handle country change
   const handleCountryChange = (country: CountryCode) => {
@@ -251,18 +261,8 @@ export default function PhoneField({ config }: Props): JSX.Element {
             border rounded-r-md
             transition-all duration-150
             focus:outline-none focus:ring-2 focus:border-blue-500
-            ${
-              showError
-                ? 'border-red-500 focus:ring-red-500 focus:border-red-500 hover:border-red-400'
-                : showSuccess
-                  ? 'border-green-500 focus:ring-green-500 focus:border-green-500 hover:border-green-400'
-                  : 'border-gray-300 focus:ring-blue-500 hover:border-gray-400'
-            }
-            ${
-              isDisabled
-                ? 'bg-gray-100 text-gray-500 cursor-not-allowed hover:border-gray-300'
-                : 'bg-white'
-            }
+            ${phoneBorderClass}
+            ${phoneDisabledClass}
           `}
         />
       </div>

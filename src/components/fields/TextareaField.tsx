@@ -19,7 +19,7 @@ type Props = {
  * TextareaField component for multiline text input
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export default function TextareaField({ config }: Props): JSX.Element {
+export default function TextareaField({ config }: Readonly<Props>): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
 
   const fieldId = `field-${config.key}`;

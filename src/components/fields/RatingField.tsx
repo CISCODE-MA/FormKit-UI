@@ -63,7 +63,7 @@ function StarIcon({ filled, half }: { filled: boolean; half?: boolean }): JSX.El
  * Supports configurable max stars, half-star precision, and keyboard navigation
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export default function RatingField({ config }: Props): JSX.Element {
+export default function RatingField({ config }: Readonly<Props>): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
   const { t } = useI18n();
 
@@ -116,7 +116,7 @@ export default function RatingField({ config }: Props): JSX.Element {
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (isDisabled) return;
 
-    let newRating = currentRating;
+    let newRating: number | null = null;
 
     switch (e.key) {
       case 'ArrowRight':
@@ -140,6 +140,8 @@ export default function RatingField({ config }: Props): JSX.Element {
       default:
         return;
     }
+
+    if (newRating === null) return;
 
     setValue(config.key, newRating);
     setTouched(config.key, true);

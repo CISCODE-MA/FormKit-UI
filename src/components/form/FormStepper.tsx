@@ -19,52 +19,107 @@ type Props = {
   onStepClick?: (stepIndex: number) => void;
 };
 
+type StepState = {
+  isActive: boolean;
+  isCompleted: boolean;
+  isClickable: boolean;
+};
+
+function getStepState(
+  index: number,
+  currentStep: number,
+  onStepClick?: (stepIndex: number) => void,
+): StepState {
+  const isActive = index === currentStep;
+  const isCompleted = index < currentStep;
+  return {
+    isActive,
+    isCompleted,
+    isClickable: Boolean(onStepClick) && isCompleted,
+  };
+}
+
+function getStepItemClassName(state: StepState): string {
+  return [
+    'formkit-stepper-step flex items-center gap-2',
+    state.isActive ? 'formkit-stepper-step-active text-blue-600' : '',
+    state.isCompleted ? 'formkit-stepper-step-completed text-green-600' : '',
+    !state.isActive && !state.isCompleted ? 'text-gray-400' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
+
+function getStepNumberClassName(state: StepState): string {
+  return [
+    'formkit-stepper-number flex items-center justify-center w-8 h-8 rounded-full border-2',
+    state.isActive ? 'border-blue-600 bg-blue-600 text-white' : '',
+    state.isCompleted ? 'border-green-600 bg-green-600 text-white' : '',
+    !state.isActive && !state.isCompleted ? 'border-gray-300 bg-white text-gray-400' : '',
+    state.isClickable ? 'cursor-pointer hover:opacity-80' : 'cursor-default',
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
+
+function getStepTitleClassName(state: StepState): string {
+  return [
+    'formkit-stepper-title text-sm font-medium',
+    state.isActive ? 'text-blue-600' : '',
+    state.isCompleted ? 'text-green-600' : '',
+    !state.isActive && !state.isCompleted ? 'text-gray-500' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
+
+function getStepAriaLabel(
+  index: number,
+  title: string,
+  state: StepState,
+  t: (key: string) => string,
+): string {
+  const stateSuffix = [
+    state.isCompleted ? `(${t('a11y.stepCompleted')})` : '',
+    state.isActive ? `(${t('a11y.stepCurrent')})` : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return `${t('a11y.stepNumber')} ${index + 1}: ${title}${stateSuffix ? ` ${stateSuffix}` : ''}`;
+}
+
 /**
  * Displays step progress indicator for multi-step forms
  * Supports accessible navigation with aria attributes
  *
  * @internal
  */
-export default function FormStepper({ steps, currentStep, onStepClick }: Props): JSX.Element {
+export default function FormStepper({
+  steps,
+  currentStep,
+  onStepClick,
+}: Readonly<Props>): JSX.Element {
   const { t } = useI18n();
 
   return (
     <nav className="formkit-stepper" aria-label={t('a11y.formSteps')}>
-      <ol className="flex items-center gap-2" role="list">
+      <ol className="flex items-center gap-2">
         {steps.map((step, index) => {
-          const isActive = index === currentStep;
-          const isCompleted = index < currentStep;
-          const isClickable = !!onStepClick && isCompleted;
+          const state = getStepState(index, currentStep, onStepClick);
 
           return (
-            <li
-              key={step.title}
-              className={`
-                formkit-stepper-step
-                flex items-center gap-2
-                ${isActive ? 'formkit-stepper-step-active text-blue-600' : ''}
-                ${isCompleted ? 'formkit-stepper-step-completed text-green-600' : ''}
-                ${!isActive && !isCompleted ? 'text-gray-400' : ''}
-              `}
-            >
+            <li key={step.title} className={getStepItemClassName(state)}>
               {/* Step number/icon */}
               <button
                 type="button"
-                className={`
-                  formkit-stepper-number
-                  flex items-center justify-center
-                  w-8 h-8 rounded-full border-2
-                  ${isActive ? 'border-blue-600 bg-blue-600 text-white' : ''}
-                  ${isCompleted ? 'border-green-600 bg-green-600 text-white' : ''}
-                  ${!isActive && !isCompleted ? 'border-gray-300 bg-white text-gray-400' : ''}
-                  ${isClickable ? 'cursor-pointer hover:opacity-80' : 'cursor-default'}
-                `}
-                onClick={() => isClickable && onStepClick(index)}
-                disabled={!isClickable}
-                aria-current={isActive ? 'step' : undefined}
-                aria-label={`${t('a11y.stepNumber')} ${index + 1}: ${step.title}${isCompleted ? ` (${t('a11y.stepCompleted')})` : ''}${isActive ? ` (${t('a11y.stepCurrent')})` : ''}`}
+                className={getStepNumberClassName(state)}
+                onClick={() => state.isClickable && onStepClick?.(index)}
+                disabled={!state.isClickable}
+                aria-current={state.isActive ? 'step' : undefined}
+                aria-label={getStepAriaLabel(index, step.title, state, t)}
               >
-                {isCompleted ? (
+                {state.isCompleted ? (
                   <svg
                     className="w-4 h-4"
                     fill="none"
@@ -85,17 +140,7 @@ export default function FormStepper({ steps, currentStep, onStepClick }: Props):
               </button>
 
               {/* Step title */}
-              <span
-                className={`
-                  formkit-stepper-title
-                  text-sm font-medium
-                  ${isActive ? 'text-blue-600' : ''}
-                  ${isCompleted ? 'text-green-600' : ''}
-                  ${!isActive && !isCompleted ? 'text-gray-500' : ''}
-                `}
-              >
-                {step.title}
-              </span>
+              <span className={getStepTitleClassName(state)}>{step.title}</span>
 
               {/* Connector line (not on last step) */}
               {index < steps.length - 1 && (
@@ -103,7 +148,7 @@ export default function FormStepper({ steps, currentStep, onStepClick }: Props):
                   className={`
                     formkit-stepper-connector
                     flex-1 h-0.5 mx-2
-                    ${isCompleted ? 'bg-green-600' : 'bg-gray-200'}
+                    ${state.isCompleted ? 'bg-green-600' : 'bg-gray-200'}
                   `}
                   aria-hidden="true"
                 />

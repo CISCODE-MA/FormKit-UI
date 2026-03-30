@@ -19,7 +19,7 @@ type Props = {
  * CheckboxField component for boolean input
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export default function CheckboxField({ config }: Props): JSX.Element {
+export default function CheckboxField({ config }: Readonly<Props>): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
 
   const fieldId = `field-${config.key}`;
@@ -52,9 +52,9 @@ export default function CheckboxField({ config }: Props): JSX.Element {
 
   return (
     <div className="formkit-checkbox-field flex flex-col gap-1 mb-4">
-      <div
+      <label
+        htmlFor={fieldId}
         className={`flex items-start gap-3 ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-        onClick={() => !isDisabled && setValue(config.key, !isChecked)}
       >
         {/* Hidden native checkbox for form submission and a11y */}
         <input
@@ -105,8 +105,7 @@ export default function CheckboxField({ config }: Props): JSX.Element {
         </span>
 
         <div className="flex flex-col">
-          <label
-            htmlFor={fieldId}
+          <span
             className={`
               formkit-checkbox-label
               text-sm font-medium text-gray-700
@@ -115,14 +114,14 @@ export default function CheckboxField({ config }: Props): JSX.Element {
           >
             {config.label}
             {config.required && <span className="text-red-500 ml-1">*</span>}
-          </label>
+          </span>
           {config.description && (
             <p id={descId} className="text-xs text-gray-500 mt-0.5">
               {config.description}
             </p>
           )}
         </div>
-      </div>
+      </label>
 
       {showError && <FieldError id={errorId} message={error} />}
     </div>

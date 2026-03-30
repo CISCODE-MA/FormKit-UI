@@ -39,6 +39,20 @@ type ArrayRowProviderProps = {
   children: ReactNode;
 };
 
+function getRowHintMessage(
+  minRows: number,
+  maxRows: number,
+  t: (key: string, params?: Record<string, number>) => string,
+): string {
+  if (minRows > 0 && maxRows < Infinity) {
+    return t('array.minMaxHint', { min: minRows, max: maxRows });
+  }
+  if (minRows > 0) {
+    return t('array.minHint', { min: minRows });
+  }
+  return t('array.maxHint', { max: maxRows });
+}
+
 /**
  * Provides a scoped FormKitContext for each array row
  * This allows nested Field components to use the existing field implementations
@@ -154,7 +168,7 @@ const PlusIcon = (): JSX.Element => (
  * - Confirmation before remove (optional)
  * - Keyboard accessible
  */
-export default function ArrayField({ config }: Props): JSX.Element {
+export default function ArrayField({ config }: Readonly<Props>): JSX.Element {
   const { getValue, setValue, getError, getValues } = useFormKitContext();
   const { t } = useI18n();
 
@@ -489,13 +503,7 @@ export default function ArrayField({ config }: Props): JSX.Element {
 
       {/* Row count hint */}
       {(minRows > 0 || maxRows < Infinity) && (
-        <p className="text-xs text-gray-500">
-          {minRows > 0 && maxRows < Infinity
-            ? t('array.minMaxHint', { min: minRows, max: maxRows })
-            : minRows > 0
-              ? t('array.minHint', { min: minRows })
-              : t('array.maxHint', { max: maxRows })}
-        </p>
+        <p className="text-xs text-gray-500">{getRowHintMessage(minRows, maxRows, t)}</p>
       )}
 
       {showError && <FieldError id={errorId} message={error} />}

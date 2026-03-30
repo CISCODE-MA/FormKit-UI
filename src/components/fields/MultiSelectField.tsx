@@ -16,12 +16,68 @@ type Props = {
   config: FieldConfig;
 };
 
+type KeyDownContext = {
+  isOpen: boolean;
+  isDisabled: boolean | undefined;
+  focusedIndex: number;
+  optionCount: number;
+  open: () => void;
+  close: () => void;
+  focusNext: () => void;
+  focusPrev: () => void;
+  focusFirst: () => void;
+  focusLast: () => void;
+  selectFocused: () => void;
+};
+
+function handleDropdownKeyDown(e: KeyboardEvent<HTMLDivElement>, ctx: KeyDownContext): void {
+  if (ctx.isDisabled) return;
+
+  switch (e.key) {
+    case 'ArrowDown':
+      e.preventDefault();
+      if (!ctx.isOpen) {
+        ctx.open();
+      } else {
+        ctx.focusNext();
+      }
+      return;
+    case 'ArrowUp':
+      e.preventDefault();
+      if (ctx.isOpen) ctx.focusPrev();
+      return;
+    case 'Enter':
+    case ' ':
+      e.preventDefault();
+      if (ctx.isOpen && ctx.focusedIndex >= 0 && ctx.focusedIndex < ctx.optionCount) {
+        ctx.selectFocused();
+      } else if (!ctx.isOpen) {
+        ctx.open();
+      }
+      return;
+    case 'Escape':
+      e.preventDefault();
+      ctx.close();
+      return;
+    case 'Home':
+      e.preventDefault();
+      if (ctx.isOpen) ctx.focusFirst();
+      return;
+    case 'End':
+      e.preventDefault();
+      if (ctx.isOpen) ctx.focusLast();
+      return;
+    default:
+      return;
+  }
+}
+
 /**
  * MultiSelectField component for selecting multiple options
  * Features: searchable dropdown, tag display, clear all, keyboard navigation
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export default function MultiSelectField({ config }: Props): JSX.Element {
+export default function MultiSelectField({ config }: Readonly<Props>): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
   const { t } = useI18n();
 
@@ -96,60 +152,30 @@ export default function MultiSelectField({ config }: Props): JSX.Element {
     setTouched(config.key, true);
   };
 
+  const closeDropdown = () => {
+    setIsOpen(false);
+    setSearchQuery('');
+    setFocusedIndex(-1);
+  };
+
   // Handle keyboard navigation
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (isDisabled) return;
-
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        if (!isOpen) {
-          setIsOpen(true);
-          setFocusedIndex(0);
-        } else {
-          setFocusedIndex((prev) => Math.min(prev + 1, filteredOptions.length - 1));
-        }
-        break;
-
-      case 'ArrowUp':
-        e.preventDefault();
-        if (isOpen) {
-          setFocusedIndex((prev) => Math.max(prev - 1, 0));
-        }
-        break;
-
-      case 'Enter':
-      case ' ':
-        e.preventDefault();
-        if (isOpen && focusedIndex >= 0 && focusedIndex < filteredOptions.length) {
-          toggleOption(filteredOptions[focusedIndex].value);
-        } else if (!isOpen) {
-          setIsOpen(true);
-          setFocusedIndex(0);
-        }
-        break;
-
-      case 'Escape':
-        e.preventDefault();
-        setIsOpen(false);
-        setSearchQuery('');
-        setFocusedIndex(-1);
-        break;
-
-      case 'Home':
-        e.preventDefault();
-        if (isOpen) {
-          setFocusedIndex(0);
-        }
-        break;
-
-      case 'End':
-        e.preventDefault();
-        if (isOpen) {
-          setFocusedIndex(filteredOptions.length - 1);
-        }
-        break;
-    }
+    handleDropdownKeyDown(e, {
+      isOpen,
+      isDisabled,
+      focusedIndex,
+      optionCount: filteredOptions.length,
+      open: () => {
+        setIsOpen(true);
+        setFocusedIndex(0);
+      },
+      close: closeDropdown,
+      focusNext: () => setFocusedIndex((prev) => Math.min(prev + 1, filteredOptions.length - 1)),
+      focusPrev: () => setFocusedIndex((prev) => Math.max(prev - 1, 0)),
+      focusFirst: () => setFocusedIndex(0),
+      focusLast: () => setFocusedIndex(filteredOptions.length - 1),
+      selectFocused: () => toggleOption(filteredOptions[focusedIndex].value),
+    });
   };
 
   // Close dropdown when clicking outside

@@ -21,7 +21,7 @@ type Props = {
  * SelectField component for dropdown selection with search
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export default function SelectField({ config }: Props): JSX.Element {
+export default function SelectField({ config }: Readonly<Props>): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
   const { t } = useI18n();
 
@@ -55,12 +55,14 @@ export default function SelectField({ config }: Props): JSX.Element {
 
   // Options
   const options = config.options ?? [];
+  const normalizedValue = typeof value === 'string' || typeof value === 'number' ? value : null;
   const filteredOptions = searchQuery
     ? options.filter((opt) => opt.label.toLowerCase().includes(searchQuery.toLowerCase()))
     : options;
 
   // Get selected option for display
-  const selectedOption = options.find((opt) => String(opt.value) === String(value));
+  const selectedOption =
+    normalizedValue === null ? undefined : options.find((opt) => opt.value === normalizedValue);
 
   // Handle option selection
   const selectOption = (optionValue: string | number) => {
@@ -332,7 +334,7 @@ export default function SelectField({ config }: Props): JSX.Element {
                 </li>
               ) : (
                 filteredOptions.map((option, index) => {
-                  const isSelected = String(option.value) === String(value);
+                  const isSelected = normalizedValue !== null && option.value === normalizedValue;
                   const isFocused = focusedIndex === index;
 
                   return (

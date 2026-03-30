@@ -42,7 +42,7 @@ type Props = {
  *
  * @internal — use DynamicForm, not Field directly
  */
-export default function Field({ config }: Props): JSX.Element | null {
+export default function Field({ config }: Readonly<Props>): JSX.Element | null {
   const { getValues } = useFormKitContext();
 
   // Check conditional visibility

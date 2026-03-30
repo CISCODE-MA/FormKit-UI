@@ -22,7 +22,7 @@ type Props = {
  * Custom calendar dropdown matching SelectField styling
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export default function DateField({ config }: Props): JSX.Element {
+export default function DateField({ config }: Readonly<Props>): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
   const { t, translations } = useI18n();
 
@@ -65,8 +65,9 @@ export default function DateField({ config }: Props): JSX.Element {
   const parseDate = (): Date | null => {
     if (!value) return null;
     if (value instanceof Date) return value;
+    if (typeof value !== 'string' && typeof value !== 'number') return null;
     const d = new Date(String(value));
-    return isNaN(d.getTime()) ? null : d;
+    return Number.isNaN(d.getTime()) ? null : d;
   };
 
   const selectedDate = parseDate();
@@ -77,7 +78,7 @@ export default function DateField({ config }: Props): JSX.Element {
   const [focusedDate, setFocusedDate] = useState<Date | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const calendarRef = useRef<HTMLDivElement>(null);
+  const calendarRef = useRef<HTMLDialogElement>(null);
   const mouseDownInsideRef = useRef(false);
 
   // Compute disabled state
@@ -180,7 +181,7 @@ export default function DateField({ config }: Props): JSX.Element {
   };
 
   // Handle keyboard navigation
-  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
     if (isDisabled) return;
 
     switch (e.key) {
@@ -274,6 +275,20 @@ export default function DateField({ config }: Props): JSX.Element {
   }, []);
 
   const calendarDays = getCalendarDays();
+  let emptyCellCounter = 0;
+
+  const getDateCellClassName = (date: Date): string => {
+    if (isSameDay(date, selectedDate)) {
+      return 'bg-blue-100 text-blue-800 text-sm font-medium';
+    }
+    if (isSameDay(date, focusedDate)) {
+      return 'bg-blue-100';
+    }
+    if (isToday(date)) {
+      return 'bg-gray-100 font-semibold';
+    }
+    return 'hover:bg-gray-100';
+  };
 
   return (
     <div className="formkit-date-field flex flex-col gap-1 mb-4" ref={containerRef}>
@@ -287,7 +302,8 @@ export default function DateField({ config }: Props): JSX.Element {
 
       <div className="relative">
         {/* Main control area */}
-        <div
+        <button
+          type="button"
           id={fieldId}
           role="combobox"
           aria-expanded={isOpen}
@@ -344,31 +360,6 @@ export default function DateField({ config }: Props): JSX.Element {
               {formatDisplayDate()}
             </span>
 
-            {/* Clear button */}
-            {selectedDate && !isDisabled && !config.readOnly && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  clearSelection();
-                }}
-                aria-label={t('field.clearSelection')}
-                className="
-                  p-1 text-gray-400 hover:text-gray-600
-                  focus:outline-none focus:ring-1 focus:ring-blue-500 rounded
-                "
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            )}
-
             {/* Dropdown arrow */}
             <svg
               className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
@@ -385,16 +376,35 @@ export default function DateField({ config }: Props): JSX.Element {
               />
             </svg>
           </div>
-        </div>
+        </button>
+
+        {selectedDate && !isDisabled && !config.readOnly && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              clearSelection();
+            }}
+            aria-label={t('field.clearSelection')}
+            className="absolute right-7 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 rounded"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        )}
 
         {/* Calendar dropdown */}
         {isOpen && !isDisabled && !config.readOnly && (
-          <div
+          <dialog
             ref={calendarRef}
-            role="dialog"
+            open
             aria-label={t('datetime.selectDate')}
-            onClick={(e) => e.stopPropagation()}
-            onMouseDown={(e) => e.stopPropagation()}
             className="
               formkit-date-dropdown
               absolute z-50 mt-[7px]
@@ -460,8 +470,12 @@ export default function DateField({ config }: Props): JSX.Element {
 
             {/* Calendar grid */}
             <div className="grid grid-cols-7 gap-0" role="grid" aria-label={t('a11y.calendar')}>
-              {calendarDays.map((date, index) => (
-                <div key={index} role="gridcell" className="flex items-center justify-center">
+              {calendarDays.map((date) => (
+                <div
+                  key={date ? date.toISOString() : `empty-${emptyCellCounter++}`}
+                  role="gridcell"
+                  className="flex items-center justify-center"
+                >
                   {date ? (
                     <button
                       type="button"
@@ -473,15 +487,7 @@ export default function DateField({ config }: Props): JSX.Element {
                         flex items-center justify-center
                         transition-colors duration-100
                         focus:outline-none
-                        ${
-                          isSameDay(date, selectedDate)
-                            ? 'bg-blue-100 text-blue-800 text-sm font-medium'
-                            : isSameDay(date, focusedDate)
-                              ? 'bg-blue-100'
-                              : isToday(date)
-                                ? 'bg-gray-100 font-semibold'
-                                : 'hover:bg-gray-100'
-                        }
+                        ${getDateCellClassName(date)}
                       `}
                     >
                       {date.getDate()}
@@ -507,7 +513,7 @@ export default function DateField({ config }: Props): JSX.Element {
                 {t('datetime.today')}
               </button>
             </div>
-          </div>
+          </dialog>
         )}
       </div>
 

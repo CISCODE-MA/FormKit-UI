@@ -11,9 +11,11 @@ import type { FieldConfig } from '../../../models/FieldConfig';
 import DynamicForm from '../../form/DynamicForm';
 
 describe('PhoneField', () => {
+  const DEFAULT_PHONE_VALUE = { countryCode: 'US', dialCode: '+1', number: '' };
+
   const renderPhoneField = (
     fieldConfig: Partial<FieldConfig> = {},
-    defaultValue = { countryCode: 'US', dialCode: '+1', number: '' },
+    defaultValue = DEFAULT_PHONE_VALUE,
   ) => {
     const fields: FieldConfig[] = [
       {

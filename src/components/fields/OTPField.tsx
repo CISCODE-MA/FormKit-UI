@@ -20,7 +20,7 @@ type Props = {
  * Supports 4-6 digit codes with auto-advance and paste support
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export default function OTPField({ config }: Props): JSX.Element {
+export default function OTPField({ config }: Readonly<Props>): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
 
   const fieldId = `field-${config.key}`;
@@ -141,6 +141,12 @@ export default function OTPField({ config }: Props): JSX.Element {
   // Check if OTP is complete
   const isComplete = digits.every((d) => d !== '');
 
+  const getInputStateClass = (digit: string, index: number): string => {
+    if (showError) return 'border-red-500';
+    if (digit || focusedIndex === index) return 'border-blue-500';
+    return 'border-gray-300 hover:border-gray-400';
+  };
+
   return (
     <div className="formkit-otp-field flex flex-col gap-2 mb-4">
       <FieldLabel htmlFor={`${fieldId}-0`} label={config.label} required={config.required} />
@@ -186,15 +192,7 @@ export default function OTPField({ config }: Props): JSX.Element {
               border-2 rounded-lg
               transition-all duration-150
               focus:outline-none
-              ${
-                showError
-                  ? 'border-red-500'
-                  : digit
-                    ? 'border-blue-500'
-                    : focusedIndex === index
-                      ? 'border-blue-500'
-                      : 'border-gray-300 hover:border-gray-400'
-              }
+              ${getInputStateClass(digit, index)}
               ${isComplete && !showError ? 'border-green-500 bg-green-50' : 'bg-white'}
               ${isDisabled ? 'bg-gray-100 cursor-not-allowed opacity-50' : ''}
             `}

@@ -22,7 +22,7 @@ type Props = {
  * Custom dropdown matching SelectField styling
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export default function TimeField({ config }: Props): JSX.Element {
+export default function TimeField({ config }: Readonly<Props>): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
   const { t, translations } = useI18n();
 
@@ -37,7 +37,7 @@ export default function TimeField({ config }: Props): JSX.Element {
 
   // Parse current value (HH:mm format)
   const currentValue = typeof value === 'string' ? value : '';
-  const [hours, minutes] = currentValue.split(':').map((v) => parseInt(v, 10) || 0);
+  const [hours, minutes] = currentValue.split(':').map((v) => Number.parseInt(v, 10) || 0);
 
   // UI state
   const [isOpen, setIsOpen] = useState(false);
@@ -115,7 +115,7 @@ export default function TimeField({ config }: Props): JSX.Element {
   };
 
   // Handle keyboard navigation
-  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
     if (isDisabled) return;
 
     switch (e.key) {
@@ -238,7 +238,8 @@ export default function TimeField({ config }: Props): JSX.Element {
 
       <div className="relative">
         {/* Main control area */}
-        <div
+        <button
+          type="button"
           id={fieldId}
           role="combobox"
           aria-expanded={isOpen}
@@ -295,31 +296,6 @@ export default function TimeField({ config }: Props): JSX.Element {
               {formatDisplayTime()}
             </span>
 
-            {/* Clear button */}
-            {currentValue && !isDisabled && !config.readOnly && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  clearSelection();
-                }}
-                aria-label={t('field.clearSelection')}
-                className="
-                  p-1 text-gray-400 hover:text-gray-600
-                  focus:outline-none focus:ring-1 focus:ring-blue-500 rounded
-                "
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            )}
-
             {/* Dropdown arrow */}
             <svg
               className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
@@ -336,15 +312,34 @@ export default function TimeField({ config }: Props): JSX.Element {
               />
             </svg>
           </div>
-        </div>
+        </button>
+
+        {currentValue && !isDisabled && !config.readOnly && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              clearSelection();
+            }}
+            aria-label={t('field.clearSelection')}
+            className="absolute right-7 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 rounded"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        )}
 
         {/* Time picker dropdown */}
         {isOpen && !isDisabled && !config.readOnly && (
-          <div
-            role="dialog"
+          <dialog
+            open
             aria-label={t('datetime.selectTime')}
-            onClick={(e) => e.stopPropagation()}
-            onMouseDown={(e) => e.stopPropagation()}
             className="
               formkit-time-dropdown
               absolute z-50 mt-[7px]
@@ -358,7 +353,6 @@ export default function TimeField({ config }: Props): JSX.Element {
                 <span className="text-sm font-medium text-center mb-1">{t('datetime.hour')}</span>
                 <ul
                   ref={hourListRef}
-                  role="listbox"
                   aria-label={t('datetime.hour')}
                   className="h-48 overflow-auto py-1 scrollbar-none"
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
@@ -366,22 +360,24 @@ export default function TimeField({ config }: Props): JSX.Element {
                   {hourOptions.map((h) => {
                     const displayHour = h % 12 || 12;
                     return (
-                      <li
-                        key={h}
-                        role="option"
-                        aria-selected={h === selectedHour}
-                        onClick={() => {
-                          setSelectedHour(h);
-                          setFocusedColumn('minute');
-                        }}
-                        className={`
-                          px-2 py-1.5 text-sm text-center rounded-md cursor-pointer
-                          transition-colors duration-100
-                          ${h === selectedHour ? 'bg-blue-100 text-blue-800 text-sm font-medium' : 'hover:bg-gray-100'}
-                        `}
-                      >
-                        {displayHour}{' '}
-                        {h >= 12 ? translations.datetime.pm : translations.datetime.am}
+                      <li key={h} aria-selected={h === selectedHour}>
+                        <button
+                          type="button"
+                          role="option"
+                          aria-selected={h === selectedHour}
+                          onClick={() => {
+                            setSelectedHour(h);
+                            setFocusedColumn('minute');
+                          }}
+                          className={`
+                            w-full px-2 py-1.5 text-sm text-center rounded-md
+                            transition-colors duration-100
+                            ${h === selectedHour ? 'bg-blue-100 text-blue-800 text-sm font-medium' : 'hover:bg-gray-100'}
+                          `}
+                        >
+                          {displayHour}{' '}
+                          {h >= 12 ? translations.datetime.pm : translations.datetime.am}
+                        </button>
                       </li>
                     );
                   })}
@@ -393,24 +389,25 @@ export default function TimeField({ config }: Props): JSX.Element {
                 <span className="text-sm font-medium text-center mb-1">{t('datetime.minute')}</span>
                 <ul
                   ref={minuteListRef}
-                  role="listbox"
                   aria-label={t('datetime.minute')}
                   className="h-48 overflow-auto py-1 scrollbar-none"
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                   {minuteOptions.map((m) => (
-                    <li
-                      key={m}
-                      role="option"
-                      aria-selected={m === selectedMinute}
-                      onClick={() => setSelectedMinute(m)}
-                      className={`
-                        px-2 py-1.5 text-sm text-center rounded-md cursor-pointer
-                        transition-colors duration-100
-                        ${m === selectedMinute ? 'bg-blue-100 text-blue-800 text-sm font-medium' : 'hover:bg-gray-100'}
-                      `}
-                    >
-                      {String(m).padStart(2, '0')}
+                    <li key={m} aria-selected={m === selectedMinute}>
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={m === selectedMinute}
+                        onClick={() => setSelectedMinute(m)}
+                        className={`
+                          w-full px-2 py-1.5 text-sm text-center rounded-md
+                          transition-colors duration-100
+                          ${m === selectedMinute ? 'bg-blue-100 text-blue-800 text-sm font-medium' : 'hover:bg-gray-100'}
+                        `}
+                      >
+                        {String(m).padStart(2, '0')}
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -432,7 +429,7 @@ export default function TimeField({ config }: Props): JSX.Element {
                 {t('form.confirm')}
               </button>
             </div>
-          </div>
+          </dialog>
         )}
       </div>
 

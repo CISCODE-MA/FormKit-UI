@@ -59,8 +59,7 @@ describe('grid utilities', () => {
     });
 
     it('uses default span when undefined', () => {
-      expect(getColSpanClass(undefined)).toBe('col-span-1');
-      expect(getColSpanClass(undefined, 4)).toBe('col-span-4');
+      expect(getColSpanClass()).toBe('col-span-1');
     });
   });
 

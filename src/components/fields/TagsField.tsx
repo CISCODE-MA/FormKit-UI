@@ -21,7 +21,7 @@ type Props = {
  * Supports Enter/comma to add, backspace to remove, paste for bulk add
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export default function TagsField({ config }: Props): JSX.Element {
+export default function TagsField({ config }: Readonly<Props>): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
   const { t } = useI18n();
 
@@ -134,8 +134,6 @@ export default function TagsField({ config }: Props): JSX.Element {
           }
           ${isDisabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
         `}
-        role="listbox"
-        aria-label={`${config.label} ${t('tags.addTag')}`}
         aria-describedby={describedBy}
       >
         {tags.map((tag, index) => (

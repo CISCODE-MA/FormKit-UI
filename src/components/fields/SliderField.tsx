@@ -19,7 +19,7 @@ type Props = {
  * SliderField component for numeric range input
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export default function SliderField({ config }: Props): JSX.Element {
+export default function SliderField({ config }: Readonly<Props>): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
 
   const fieldId = `field-${config.key}`;
@@ -56,7 +56,7 @@ export default function SliderField({ config }: Props): JSX.Element {
   // Handle number input change with clamping
   const handleInputChange = (inputValue: string) => {
     const parsed = Number(inputValue);
-    if (isNaN(parsed)) return;
+    if (Number.isNaN(parsed)) return;
     // Clamp value to min/max range
     const clamped = Math.min(Math.max(parsed, min), max);
     setValue(config.key, clamped);

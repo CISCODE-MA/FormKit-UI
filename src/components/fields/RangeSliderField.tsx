@@ -42,7 +42,7 @@ function parseRangeValue(value: unknown, min: number, max: number): RangeValue {
  * Uses two overlapping range inputs for dual-thumb functionality
  * Follows WCAG 2.1 AA accessibility requirements
  */
-export default function RangeSliderField({ config }: Props): JSX.Element {
+export default function RangeSliderField({ config }: Readonly<Props>): JSX.Element {
   const { getValue, setValue, getError, getTouched, setTouched, getValues } = useFormKitContext();
 
   const fieldId = `field-${config.key}`;
@@ -95,14 +95,14 @@ export default function RangeSliderField({ config }: Props): JSX.Element {
   // Handle number input change with clamping
   const handleFromInputChange = (inputValue: string) => {
     const parsed = Number(inputValue);
-    if (isNaN(parsed)) return;
+    if (Number.isNaN(parsed)) return;
     const clamped = Math.min(Math.max(parsed, min), rangeValue.to - step);
     setValue(config.key, { from: clamped, to: rangeValue.to });
   };
 
   const handleToInputChange = (inputValue: string) => {
     const parsed = Number(inputValue);
-    if (isNaN(parsed)) return;
+    if (Number.isNaN(parsed)) return;
     const clamped = Math.max(Math.min(parsed, max), rangeValue.from + step);
     setValue(config.key, { from: rangeValue.from, to: clamped });
   };
@@ -238,7 +238,6 @@ export default function RangeSliderField({ config }: Props): JSX.Element {
           disabled={isDisabled}
           aria-label={`${config.label} maximum value`}
           aria-invalid={showError}
-          aria-required={config.required}
           aria-valuemin={rangeValue.from}
           aria-valuemax={max}
           aria-valuenow={rangeValue.to}
