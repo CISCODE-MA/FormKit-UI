@@ -63,7 +63,8 @@ jobs:
             -Dsonar.organization=${{ env.SONAR_ORGANIZATION }}
             -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
             -Dsonar.sources=src
-            -Dsonar.tests=test
+            -Dsonar.tests=src/__tests__
+            -Dsonar.exclusions=src/__tests__/**
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
 
       - name: SonarCloud Quality Gate
