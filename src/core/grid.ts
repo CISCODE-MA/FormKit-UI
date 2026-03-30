@@ -14,6 +14,36 @@ import type {
  * Breakpoint prefixes for Tailwind CSS
  */
 type Breakpoint = 'default' | 'sm' | 'md' | 'lg' | 'xl';
+const BREAKPOINTS: Breakpoint[] = ['default', 'sm', 'md', 'lg', 'xl'];
+
+type ResponsiveValueMap = Partial<Record<Breakpoint, number>>;
+
+function buildResponsiveClasses(
+  values: ResponsiveValueMap,
+  basePrefix: string,
+  fallbackDefault?: number,
+): string {
+  const classes: string[] = [];
+  let hasDefault = false;
+
+  for (const bp of BREAKPOINTS) {
+    const value = values[bp];
+    if (value !== undefined) {
+      if (bp === 'default') {
+        classes.push(`${basePrefix}-${value}`);
+        hasDefault = true;
+      } else {
+        classes.push(`${bp}:${basePrefix}-${value}`);
+      }
+    }
+  }
+
+  if (!hasDefault && fallbackDefault !== undefined) {
+    classes.unshift(`${basePrefix}-${fallbackDefault}`);
+  }
+
+  return classes.join(' ');
+}
 
 /**
  * Check if columns config is responsive (object vs number)
@@ -44,21 +74,7 @@ export function getGridColumnsClass(columns: ColumnCount = 1): string {
     return `grid-cols-${columns}`;
   }
 
-  const classes: string[] = [];
-  const breakpoints: Breakpoint[] = ['default', 'sm', 'md', 'lg', 'xl'];
-
-  for (const bp of breakpoints) {
-    const value = columns[bp];
-    if (value !== undefined) {
-      if (bp === 'default') {
-        classes.push(`grid-cols-${value}`);
-      } else {
-        classes.push(`${bp}:grid-cols-${value}`);
-      }
-    }
-  }
-
-  return classes.join(' ');
+  return buildResponsiveClasses(columns, 'grid-cols');
 }
 
 /**
@@ -81,30 +97,7 @@ export function getColSpanClass(colSpan?: ColSpanValue, defaultSpan: number = 1)
     return `col-span-${colSpan}`;
   }
 
-  const classes: string[] = [];
-  const breakpoints: Breakpoint[] = ['default', 'sm', 'md', 'lg', 'xl'];
-
-  // Ensure we always have a base class
-  let hasDefault = false;
-
-  for (const bp of breakpoints) {
-    const value = colSpan[bp];
-    if (value !== undefined) {
-      if (bp === 'default') {
-        classes.push(`col-span-${value}`);
-        hasDefault = true;
-      } else {
-        classes.push(`${bp}:col-span-${value}`);
-      }
-    }
-  }
-
-  // Add default if not specified
-  if (!hasDefault) {
-    classes.unshift(`col-span-${defaultSpan}`);
-  }
-
-  return classes.join(' ');
+  return buildResponsiveClasses(colSpan, 'col-span', defaultSpan);
 }
 
 /**

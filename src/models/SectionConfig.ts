@@ -6,6 +6,27 @@
 import type { FieldConfig } from './FieldConfig';
 
 /**
+ * Supported grid units for columns and col spans
+ */
+export type GridUnit = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+
+/**
+ * Shared responsive breakpoint map for grid values
+ */
+export interface ResponsiveGrid<T extends number = GridUnit> {
+  /** Base value (xs/mobile, always applied) */
+  readonly default?: T;
+  /** Small screens (≥640px) */
+  readonly sm?: T;
+  /** Medium screens (≥768px) */
+  readonly md?: T;
+  /** Large screens (≥1024px) */
+  readonly lg?: T;
+  /** Extra large screens (≥1280px) */
+  readonly xl?: T;
+}
+
+/**
  * Responsive column configuration
  * Allows specifying different column counts at different breakpoints
  *
@@ -18,18 +39,7 @@ import type { FieldConfig } from './FieldConfig';
  * };
  * ```
  */
-export interface ResponsiveColumns {
-  /** Base column count (xs/mobile, always applied) */
-  readonly default?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-  /** Small screens (≥640px) */
-  readonly sm?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-  /** Medium screens (≥768px) */
-  readonly md?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-  /** Large screens (≥1024px) */
-  readonly lg?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-  /** Extra large screens (≥1280px) */
-  readonly xl?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-}
+export type ResponsiveColumns = ResponsiveGrid<GridUnit>;
 
 /**
  * Responsive column span configuration for individual fields
@@ -42,28 +52,17 @@ export interface ResponsiveColumns {
  * };
  * ```
  */
-export interface ResponsiveColSpan {
-  /** Base column span */
-  readonly default?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-  /** Small screens (≥640px) */
-  readonly sm?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-  /** Medium screens (≥768px) */
-  readonly md?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-  /** Large screens (≥1024px) */
-  readonly lg?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-  /** Extra large screens (≥1280px) */
-  readonly xl?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-}
+export type ResponsiveColSpan = ResponsiveGrid<GridUnit>;
 
 /**
  * Column type - can be a simple number or responsive object
  */
-export type ColumnCount = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | ResponsiveColumns;
+export type ColumnCount = GridUnit | ResponsiveColumns;
 
 /**
  * Column span type - can be a simple number or responsive object
  */
-export type ColSpanValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | ResponsiveColSpan;
+export type ColSpanValue = GridUnit | ResponsiveColSpan;
 
 /**
  * Configuration for a form section that groups related fields
@@ -134,7 +133,7 @@ export type FormLayoutItem = FieldConfig | SectionConfig;
  * Type guard to check if an item is a SectionConfig
  */
 export function isSection(item: FormLayoutItem): item is SectionConfig {
-  return 'type' in item && item.type === 'section';
+  return Object.prototype.hasOwnProperty.call(item, 'type') && item.type === 'section';
 }
 
 /**

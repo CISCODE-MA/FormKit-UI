@@ -3,7 +3,7 @@
  */
 
 import type { JSX, ReactNode } from 'react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FieldType } from '../../core/types';
 import type { FieldConfig } from '../../models/FieldConfig';
 import type { FieldValue, FormValues } from '../../core/types';
@@ -51,7 +51,7 @@ function ArrayRowProvider({
   onFieldChange,
   isDisabled,
   children,
-}: Omit<ArrayRowProviderProps, 'hasError'>): JSX.Element {
+}: ArrayRowProviderProps): JSX.Element {
   const parentContext = useFormKitContext();
 
   // Track touched state per field within this row (local state for immediate feedback)
@@ -173,6 +173,7 @@ export default function ArrayField({ config }: Props): JSX.Element {
   const [confirmingRemove, setConfirmingRemove] = useState<number | null>(null);
   // Live region announcements
   const [announcement, setAnnouncement] = useState('');
+  const announcementTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Ensure value is an array
   const rows = useMemo(() => (Array.isArray(value) ? value : []), [value]);
@@ -199,7 +200,21 @@ export default function ArrayField({ config }: Props): JSX.Element {
   // Announce changes for screen readers
   const announce = useCallback((message: string) => {
     setAnnouncement(message);
-    setTimeout(() => setAnnouncement(''), 1000);
+    if (announcementTimerRef.current) {
+      clearTimeout(announcementTimerRef.current);
+    }
+    announcementTimerRef.current = setTimeout(() => {
+      setAnnouncement('');
+      announcementTimerRef.current = null;
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (announcementTimerRef.current) {
+        clearTimeout(announcementTimerRef.current);
+      }
+    };
   }, []);
 
   // Add a new row
