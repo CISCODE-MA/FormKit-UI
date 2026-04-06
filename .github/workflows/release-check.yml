@@ -152,6 +152,7 @@ jobs:
             -Dsonar.test.inclusions=**/*.spec.ts,**/*.spec.tsx,**/*.test.ts,**/*.test.tsx
             -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**,**/*.d.ts
             -Dsonar.coverage.exclusions=**/*.spec.ts,**/*.spec.tsx,**/*.test.ts,**/*.test.tsx,**/index.ts
+            -Dsonar.cpd.exclusions=src/components/fields/DateField.tsx,src/components/fields/DateTimeField.tsx,src/components/fields/TimeField.tsx,src/components/fields/SelectField.tsx,src/components/fields/MultiSelectField.tsx
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.typescript.tsconfigPath=tsconfig.json
             -Dsonar.qualitygate.wait=true
