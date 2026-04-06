@@ -384,10 +384,8 @@ export default function ArrayField({ config }: Readonly<Props>): JSX.Element {
                 <div
                   className={`
                     flex items-center px-3 py-2
-                    ${collapsible ? 'cursor-pointer hover:bg-gray-50' : ''}
                     ${showError ? 'bg-red-50' : 'bg-gray-50'}
                   `}
-                  onClick={collapsible ? () => toggleCollapse(rowIndex) : undefined}
                 >
                   {/* Row number - fixed width */}
                   <span className="text-sm font-medium text-gray-700 w-8 shrink-0">
@@ -419,7 +417,7 @@ export default function ArrayField({ config }: Readonly<Props>): JSX.Element {
 
                     {/* Remove button or confirmation */}
                     {isConfirming ? (
-                      <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-center gap-2">
                         <span className="text-sm text-red-600">{t('array.confirmRemove')}</span>
                         <button
                           type="button"
