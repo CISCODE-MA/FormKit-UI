@@ -53,6 +53,7 @@ export default function DateTimeField({ config }: Readonly<Props>): JSX.Element 
   ];
 
   const fieldId = `field-${config.key}`;
+  const dialogId = `${fieldId}-dialog`;
   const errorId = `${fieldId}-error`;
   const descId = `${fieldId}-desc`;
 
@@ -302,6 +303,7 @@ export default function DateTimeField({ config }: Readonly<Props>): JSX.Element 
           type="button"
           id={fieldId}
           role="combobox"
+          aria-controls={dialogId}
           aria-expanded={isOpen}
           aria-haspopup="dialog"
           aria-invalid={showError}
@@ -398,6 +400,7 @@ export default function DateTimeField({ config }: Readonly<Props>): JSX.Element 
         {/* DateTime picker dropdown */}
         {isOpen && !isDisabled && !config.readOnly && (
           <dialog
+            id={dialogId}
             open
             aria-label={t('datetime.selectDate')}
             className="
@@ -535,7 +538,7 @@ export default function DateTimeField({ config }: Readonly<Props>): JSX.Element 
                         <button
                           type="button"
                           onClick={() => selectCalendarDate(date)}
-                          aria-selected={isSameDay(date, tempDate)}
+                          aria-pressed={isSameDay(date, tempDate)}
                           aria-current={isToday(date) ? 'date' : undefined}
                           className={`
                             w-9 h-9 text-sm rounded-lg
@@ -610,7 +613,7 @@ export default function DateTimeField({ config }: Readonly<Props>): JSX.Element 
                         const displayHour = h % 12 || 12;
                         const ampm = h >= 12 ? translations.datetime.pm : translations.datetime.am;
                         return (
-                          <li key={h} aria-selected={h === selectedHour}>
+                          <li key={h}>
                             <button
                               type="button"
                               onClick={() => setSelectedHour(h)}
@@ -640,7 +643,7 @@ export default function DateTimeField({ config }: Readonly<Props>): JSX.Element 
                       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                     >
                       {minuteOptions.map((m) => (
-                        <li key={m} aria-selected={m === selectedMinute}>
+                        <li key={m}>
                           <button
                             type="button"
                             onClick={() => setSelectedMinute(m)}
