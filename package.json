@@ -13,6 +13,10 @@
     "dist",
     "dist/styles.css"
   ],
+  "repository": {
+    "url": "git+https://github.com/CISCODE-MA/FormKit-UI.git",
+    "type": "git"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
