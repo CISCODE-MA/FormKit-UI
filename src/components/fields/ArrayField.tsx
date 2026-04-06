@@ -457,7 +457,7 @@ export default function ArrayField({ config }: Readonly<Props>): JSX.Element {
 
                 {/* Row content (fields) - no overflow clipping to allow dropdowns to float */}
                 {!isCollapsed && (
-                  <div className="p-4 border-t border-gray-200 relative z-10">
+                  <div className="p-4 border-t border-gray-200 relative">
                     <ArrayRowProvider
                       rowData={rowData}
                       rowIndex={rowIndex}
