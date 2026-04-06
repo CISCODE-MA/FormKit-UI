@@ -27,6 +27,7 @@ export default function TimeField({ config }: Readonly<Props>): JSX.Element {
   const { t, translations } = useI18n();
 
   const fieldId = `field-${config.key}`;
+  const dialogId = `${fieldId}-dialog`;
   const errorId = `${fieldId}-error`;
   const descId = `${fieldId}-desc`;
 
@@ -242,6 +243,7 @@ export default function TimeField({ config }: Readonly<Props>): JSX.Element {
           type="button"
           id={fieldId}
           role="combobox"
+          aria-controls={dialogId}
           aria-expanded={isOpen}
           aria-haspopup="dialog"
           aria-invalid={showError}
@@ -338,6 +340,7 @@ export default function TimeField({ config }: Readonly<Props>): JSX.Element {
         {/* Time picker dropdown */}
         {isOpen && !isDisabled && !config.readOnly && (
           <dialog
+            id={dialogId}
             open
             aria-label={t('datetime.selectTime')}
             className="
@@ -360,11 +363,9 @@ export default function TimeField({ config }: Readonly<Props>): JSX.Element {
                   {hourOptions.map((h) => {
                     const displayHour = h % 12 || 12;
                     return (
-                      <li key={h} aria-selected={h === selectedHour}>
+                      <li key={h}>
                         <button
                           type="button"
-                          role="option"
-                          aria-selected={h === selectedHour}
                           onClick={() => {
                             setSelectedHour(h);
                             setFocusedColumn('minute');
@@ -394,11 +395,9 @@ export default function TimeField({ config }: Readonly<Props>): JSX.Element {
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                   {minuteOptions.map((m) => (
-                    <li key={m} aria-selected={m === selectedMinute}>
+                    <li key={m}>
                       <button
                         type="button"
-                        role="option"
-                        aria-selected={m === selectedMinute}
                         onClick={() => setSelectedMinute(m)}
                         className={`
                           w-full px-2 py-1.5 text-sm text-center rounded-md
