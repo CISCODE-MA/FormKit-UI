@@ -361,7 +361,7 @@ export default function MultiSelectField({ config }: Readonly<Props>): JSX.Eleme
           <div
             className="
               formkit-multiselect-dropdown
-              absolute z-50 mt-[7px]
+              absolute z-50 mt-1.75
               w-full max-h-60
               bg-white border border-gray-300 rounded-lg shadow-lg
               overflow-hidden
@@ -433,54 +433,57 @@ export default function MultiSelectField({ config }: Readonly<Props>): JSX.Eleme
                   return (
                     <li
                       key={String(option.value)}
-                      id={`${fieldId}-option-${index}`}
-                      role="option"
-                      aria-selected={isSelected}
-                      aria-disabled={option.disabled}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (!option.disabled) {
-                          toggleOption(option.value);
-                        }
-                      }}
                       onMouseEnter={() => setFocusedIndex(index)}
-                      className={`
-                        flex items-center gap-2 px-3 py-2
-                        cursor-pointer text-sm
-                        transition-colors duration-100
-                        ${isFocused ? 'bg-blue-50' : ''}
-                        ${isSelected ? 'bg-blue-100' : ''}
-                        ${option.disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-50'}
-                      `}
+                      className="px-0"
                     >
-                      {/* Checkbox indicator */}
-                      <span
+                      <button
+                        type="button"
+                        id={`${fieldId}-option-${index}`}
+                        role="option"
+                        aria-selected={isSelected}
+                        aria-disabled={option.disabled}
+                        disabled={option.disabled}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleOption(option.value);
+                        }}
                         className={`
-                          flex-shrink-0
-                          w-4 h-4
-                          border rounded
-                          flex items-center justify-center
-                          ${isSelected ? 'bg-blue-600 border-blue-600' : 'border-gray-300'}
+                          w-full flex items-center gap-2 px-3 py-2 text-sm text-left
+                          transition-colors duration-100
+                          ${isFocused ? 'bg-blue-50' : ''}
+                          ${isSelected ? 'bg-blue-100' : ''}
+                          ${option.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-blue-50'}
                         `}
                       >
-                        {isSelected && (
-                          <svg
-                            className="w-3 h-3 text-white"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={3}
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        )}
-                      </span>
+                        {/* Checkbox indicator */}
+                        <span
+                          className={`
+                            shrink-0
+                            w-4 h-4
+                            border rounded
+                            flex items-center justify-center
+                            ${isSelected ? 'bg-blue-600 border-blue-600' : 'border-gray-300'}
+                          `}
+                        >
+                          {isSelected && (
+                            <svg
+                              className="w-3 h-3 text-white"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={3}
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                          )}
+                        </span>
 
-                      <span className="flex-1">{option.label}</span>
+                        <span className="flex-1">{option.label}</span>
+                      </button>
                     </li>
                   );
                 })
