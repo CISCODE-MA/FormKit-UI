@@ -9,6 +9,10 @@
   "sideEffects": [
     "**/*.css"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CISCODE/FormKit-UI.git"
+  },
   "files": [
     "dist",
     "dist/styles.css"
