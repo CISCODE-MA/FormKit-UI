@@ -15,10 +15,10 @@
 ```typescript
 it('should show error message when form is invalid', async () => {
   render(<LoginForm />);
-  
+
   const submitButton = screen.getByRole('button', { name: /submit/i });
   await userEvent.click(submitButton);
-  
+
   expect(screen.getByText(/email is required/i)).toBeInTheDocument();
 });
 ```
@@ -37,12 +37,12 @@ it('should update state when input changes', () => {
 
 ## 📊 Coverage Targets
 
-| Layer           | Minimum Coverage | Priority    |
-| --------------- | ---------------- | ----------- |
-| **Hooks**       | 90%+             | 🔴 Critical |
-| **Components**  | 80%+             | 🟡 High     |
-| **Utils**       | 85%+             | 🟡 High     |
-| **Context**     | 90%+             | 🔴 Critical |
+| Layer          | Minimum Coverage | Priority    |
+| -------------- | ---------------- | ----------- |
+| **Hooks**      | 90%+             | 🔴 Critical |
+| **Components** | 80%+             | 🟡 High     |
+| **Utils**      | 85%+             | 🟡 High     |
+| **Context**    | 90%+             | 🔴 Critical |
 
 **Overall Target**: 80%+
 
@@ -62,10 +62,10 @@ src/components/Button/
 
 ### Naming Convention
 
-| Code File      | Test File       |
-| -------------- | --------------- |
-| `Button.tsx`   | `Button.test.tsx` |
-| `use-auth.ts`  | `use-auth.test.ts` |
+| Code File     | Test File          |
+| ------------- | ------------------ |
+| `Button.tsx`  | `Button.test.tsx`  |
+| `use-auth.ts` | `use-auth.test.ts` |
 
 ---
 
@@ -82,7 +82,7 @@ import { Button } from './Button';
 describe('Button', () => {
   it('should render with text', () => {
     render(<Button>Click me</Button>);
-    
+
     expect(screen.getByRole('button', { name: /click me/i }))
       .toBeInTheDocument();
   });
@@ -90,15 +90,15 @@ describe('Button', () => {
   it('should call onClick when clicked', async () => {
     const handleClick = vi.fn();
     render(<Button onClick={handleClick}>Click</Button>);
-    
+
     await userEvent.click(screen.getByRole('button'));
-    
+
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
   it('should be disabled when disabled prop is true', () => {
     render(<Button disabled>Click</Button>);
-    
+
     expect(screen.getByRole('button')).toBeDisabled();
   });
 });
@@ -113,27 +113,27 @@ import { useCounter } from './use-counter';
 describe('useCounter', () => {
   it('should initialize with default value', () => {
     const { result } = renderHook(() => useCounter());
-    
+
     expect(result.current.count).toBe(0);
   });
 
   it('should increment count', () => {
     const { result } = renderHook(() => useCounter());
-    
+
     act(() => {
       result.current.increment();
     });
-    
+
     expect(result.current.count).toBe(1);
   });
 
   it('should decrement count', () => {
     const { result } = renderHook(() => useCounter(5));
-    
+
     act(() => {
       result.current.decrement();
     });
-    
+
     expect(result.current.count).toBe(4);
   });
 });
@@ -149,17 +149,17 @@ describe('useCounter', () => {
 
 ```typescript
 // ✅ BEST - By role (accessible)
-screen.getByRole('button', { name: /submit/i })
-screen.getByRole('textbox', { name: /email/i })
+screen.getByRole('button', { name: /submit/i });
+screen.getByRole('textbox', { name: /email/i });
 
 // ✅ GOOD - By label text
-screen.getByLabelText(/email/i)
+screen.getByLabelText(/email/i);
 
 // ⚠️ OK - By test ID (last resort)
-screen.getByTestId('submit-button')
+screen.getByTestId('submit-button');
 
 // ❌ BAD - By class or internal details
-container.querySelector('.button-class')
+container.querySelector('.button-class');
 ```
 
 ### User Interactions
@@ -212,17 +212,17 @@ await waitFor(() => {
 describe('LoginForm', () => {
   it('should display error for empty email', async () => {
     render(<LoginForm />);
-    
+
     const submitBtn = screen.getByRole('button', { name: /login/i });
     await userEvent.click(submitBtn);
-    
+
     expect(screen.getByText(/email is required/i)).toBeInTheDocument();
   });
 
   it('should call onSuccess when login succeeds', async () => {
     const onSuccess = vi.fn();
     render(<LoginForm onSuccess={onSuccess} />);
-    
+
     await userEvent.type(
       screen.getByLabelText(/email/i),
       'test@example.com'
@@ -232,7 +232,7 @@ describe('LoginForm', () => {
       'password123'
     );
     await userEvent.click(screen.getByRole('button', { name: /login/i }));
-    
+
     await waitFor(() => {
       expect(onSuccess).toHaveBeenCalledWith(expect.objectContaining({
         email: 'test@example.com'
@@ -257,13 +257,13 @@ describe('LoginForm', () => {
 describe('useAuth', () => {
   it('should login user', async () => {
     const { result } = renderHook(() => useAuth());
-    
+
     await act(async () => {
       await result.current.login('test@example.com', 'password');
     });
-    
+
     expect(result.current.user).toEqual({
-      email: 'test@example.com'
+      email: 'test@example.com',
     });
     expect(result.current.isAuthenticated).toBe(true);
   });
@@ -271,10 +271,10 @@ describe('useAuth', () => {
   it('should cleanup on unmount', () => {
     const cleanup = vi.fn();
     vi.spyOn(global, 'removeEventListener').mockImplementation(cleanup);
-    
+
     const { unmount } = renderHook(() => useAuth());
     unmount();
-    
+
     expect(cleanup).toHaveBeenCalled();
   });
 });
@@ -291,7 +291,7 @@ expect.extend(toHaveNoViolations);
 
 it('should have no accessibility violations', async () => {
   const { container } = render(<LoginForm />);
-  
+
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
@@ -329,7 +329,7 @@ global.fetch = vi.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ data: 'mocked' }),
-  })
+  }),
 );
 ```
 

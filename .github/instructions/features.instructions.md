@@ -18,6 +18,7 @@
 ### Questions to Ask
 
 1. **Already exists?**
+
    ```bash
    grep -r "ComponentName" src/
    ```
@@ -104,10 +105,10 @@ export interface BadgeProps {
 
 **Step 2: Implement Component**
 
-```typescript
+````typescript
 /**
  * Badge component for displaying status or counts
- * 
+ *
  * @example
  * ```tsx
  * <Badge variant="success">Active</Badge>
@@ -149,7 +150,7 @@ export function Badge({
     </span>
   );
 }
-```
+````
 
 **Step 3: Write Tests**
 
@@ -161,33 +162,33 @@ import { Badge } from './Badge';
 describe('Badge', () => {
   it('should render with text', () => {
     render(<Badge>Active</Badge>);
-    
+
     expect(screen.getByRole('status')).toHaveTextContent('Active');
   });
 
   it('should apply variant styles', () => {
     render(<Badge variant="success">Success</Badge>);
-    
+
     const badge = screen.getByRole('status');
     expect(badge.className).toMatch(/bg-green-100/);
   });
 
   it('should apply size classes', () => {
     render(<Badge size="lg">Large</Badge>);
-    
+
     const badge = screen.getByRole('status');
     expect(badge.className).toMatch(/text-base/);
   });
 
   it('should accept custom className', () => {
     render(<Badge className="custom-class">Test</Badge>);
-    
+
     expect(screen.getByRole('status')).toHaveClass('custom-class');
   });
 
   it('should have no accessibility violations', async () => {
     const { container } = render(<Badge>Test</Badge>);
-    
+
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
@@ -214,26 +215,23 @@ export type { BadgeProps } from './components/Badge';
 
 **Step 1: Implement Hook**
 
-```typescript
+````typescript
 // src/hooks/use-local-storage.ts
 import { useState, useEffect } from 'react';
 
 /**
  * Hook for syncing state with localStorage
- * 
+ *
  * @param key - localStorage key
  * @param initialValue - Default value
  * @returns Tuple of [value, setValue]
- * 
+ *
  * @example
  * ```tsx
  * const [name, setName] = useLocalStorage<string>('name', 'Guest');
  * ```
  */
-export function useLocalStorage<T>(
-  key: string,
-  initialValue: T
-): [T, (value: T) => void] {
+export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = window.localStorage.getItem(key);
@@ -255,7 +253,7 @@ export function useLocalStorage<T>(
 
   return [storedValue, setValue];
 }
-```
+````
 
 **Step 2: Write Tests**
 
@@ -270,33 +268,27 @@ describe('useLocalStorage', () => {
   });
 
   it('should initialize with default value', () => {
-    const { result } = renderHook(() =>
-      useLocalStorage('test', 'default')
-    );
-    
+    const { result } = renderHook(() => useLocalStorage('test', 'default'));
+
     expect(result.current[0]).toBe('default');
   });
 
   it('should update localStorage when value changes', () => {
-    const { result } = renderHook(() =>
-      useLocalStorage('test', 'initial')
-    );
-    
+    const { result } = renderHook(() => useLocalStorage('test', 'initial'));
+
     act(() => {
       result.current[1]('updated');
     });
-    
+
     expect(result.current[0]).toBe('updated');
     expect(localStorage.getItem('test')).toBe('"updated"');
   });
 
   it('should read existing value from localStorage', () => {
     localStorage.setItem('test', '"existing"');
-    
-    const { result } = renderHook(() =>
-      useLocalStorage('test', 'default')
-    );
-    
+
+    const { result } = renderHook(() => useLocalStorage('test', 'default'));
+
     expect(result.current[0]).toBe('existing');
   });
 });
@@ -372,22 +364,26 @@ export type { BadgeProps } from './components/Badge';
 
 ### Migration Guide Example
 
-```markdown
+````markdown
 ## Breaking Changes in v2.0.0
 
 ### Button Component
 
 **Before (v1.x):**
+
 ```tsx
 <Button type="primary">Click</Button>
 ```
+````
 
 **After (v2.0):**
+
 ```tsx
 <Button variant="primary">Click</Button>
 ```
 
 Rename `type` prop to `variant` for consistency.
+
 ```
 
 ---
@@ -405,3 +401,4 @@ Rename `type` prop to `variant` for consistency.
 - [ ] Breaking changes documented
 - [ ] Build succeeds
 - [ ] PR created
+```

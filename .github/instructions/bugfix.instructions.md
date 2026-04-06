@@ -21,7 +21,7 @@
 describe('Bug: Button not disabled when loading', () => {
   it('should disable button during loading', () => {
     render(<Button isLoading>Click</Button>);
-    
+
     // This SHOULD pass but currently FAILS
     expect(screen.getByRole('button')).toBeDisabled();
   });
@@ -59,11 +59,11 @@ useEffect(() => {
 
 ### 1. State Management Issues
 
-| Bug Type              | Symptoms               | Solution                    |
-| --------------------- | ---------------------- | --------------------------- |
-| **Stale closure**     | Old values in callback | Update dependencies         |
-| **Infinite loop**     | Component re-renders   | Fix useEffect dependencies  |
-| **Lost state**        | State resets unexpectedly| Check component key         |
+| Bug Type          | Symptoms                  | Solution                   |
+| ----------------- | ------------------------- | -------------------------- |
+| **Stale closure** | Old values in callback    | Update dependencies        |
+| **Infinite loop** | Component re-renders      | Fix useEffect dependencies |
+| **Lost state**    | State resets unexpectedly | Check component key        |
 
 **Example fix:**
 
@@ -81,7 +81,7 @@ useEffect(() => {
 // ✅ FIX - Functional update
 useEffect(() => {
   const timer = setInterval(() => {
-    setCount(prev => prev + 1); // ✅ Uses current count
+    setCount((prev) => prev + 1); // ✅ Uses current count
   }, 1000);
   return () => clearInterval(timer);
 }, []);
@@ -89,11 +89,11 @@ useEffect(() => {
 
 ### 2. useEffect Issues
 
-| Bug Type              | Symptoms              | Solution                    |
-| --------------------- | --------------------- | --------------------------- |
-| **Memory leak**       | Performance degrades  | Add cleanup function        |
-| **Missing cleanup**   | Side effects persist  | Return cleanup              |
-| **Wrong dependencies**| Unexpected behavior   | Fix dependency array        |
+| Bug Type               | Symptoms             | Solution             |
+| ---------------------- | -------------------- | -------------------- |
+| **Memory leak**        | Performance degrades | Add cleanup function |
+| **Missing cleanup**    | Side effects persist | Return cleanup       |
+| **Wrong dependencies** | Unexpected behavior  | Fix dependency array |
 
 **Example fix:**
 
@@ -112,11 +112,11 @@ useEffect(() => {
 
 ### 3. Event Handler Issues
 
-| Bug Type              | Symptoms              | Solution                    |
-| --------------------- | --------------------- | --------------------------- |
-| **Handler not called**| Click doesn't work    | Check event binding         |
-| **Multiple calls**    | Handler fires twice   | Remove duplicate listeners  |
-| **Wrong event**       | Unexpected behavior   | Use correct event type      |
+| Bug Type               | Symptoms            | Solution                   |
+| ---------------------- | ------------------- | -------------------------- |
+| **Handler not called** | Click doesn't work  | Check event binding        |
+| **Multiple calls**     | Handler fires twice | Remove duplicate listeners |
+| **Wrong event**        | Unexpected behavior | Use correct event type     |
 
 **Example fix:**
 
@@ -131,11 +131,11 @@ useEffect(() => {
 
 ### 4. Rendering Issues
 
-| Bug Type              | Symptoms              | Solution                    |
-| --------------------- | --------------------- | --------------------------- |
-| **Conditional render**| Component disappears  | Fix condition logic         |
-| **Key prop**          | Wrong items update    | Use stable unique keys      |
-| **Forced re-render**  | Performance issues    | Memoize expensive calcs     |
+| Bug Type               | Symptoms             | Solution                |
+| ---------------------- | -------------------- | ----------------------- |
+| **Conditional render** | Component disappears | Fix condition logic     |
+| **Key prop**           | Wrong items update   | Use stable unique keys  |
+| **Forced re-render**   | Performance issues   | Memoize expensive calcs |
 
 **Example fix:**
 
@@ -153,11 +153,11 @@ useEffect(() => {
 
 ### 5. Accessibility Bugs
 
-| Bug Type              | Symptoms              | Solution                    |
-| --------------------- | --------------------- | --------------------------- |
-| **Missing ARIA**      | Screen reader issues  | Add ARIA attributes         |
-| **No keyboard nav**   | Can't use keyboard    | Add keyboard handlers       |
-| **Poor contrast**     | Hard to read          | Fix colors                  |
+| Bug Type            | Symptoms             | Solution              |
+| ------------------- | -------------------- | --------------------- |
+| **Missing ARIA**    | Screen reader issues | Add ARIA attributes   |
+| **No keyboard nav** | Can't use keyboard   | Add keyboard handlers |
+| **Poor contrast**   | Hard to read         | Fix colors            |
 
 **Example fix:**
 
@@ -182,9 +182,9 @@ useEffect(() => {
 ```typescript
 it('should fix the bug', async () => {
   render(<Component />);
-  
+
   await userEvent.click(screen.getByRole('button'));
-  
+
   expect(screen.getByText(/expected/i)).toBeInTheDocument();
 });
 ```
@@ -217,10 +217,10 @@ npm run dev
 ```typescript
 /**
  * Component that was buggy
- * 
+ *
  * @fixed v1.2.3 - Fixed click handler issue
  */
-export function Component(props: Props): JSX.Element
+export function Component(props: Props): JSX.Element;
 ```
 
 ---
@@ -241,10 +241,12 @@ const sortedItems = [...props.items].sort();
 
 ```typescript
 // ❌ Bug - Object comparison
-if (user === prevUser) { } // Always false (different references)
+if (user === prevUser) {
+} // Always false (different references)
 
 // ✅ Fix - Compare values
-if (user.id === prevUser.id) { }
+if (user.id === prevUser.id) {
+}
 ```
 
 ### 3. Missing Null Checks
