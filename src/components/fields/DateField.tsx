@@ -53,6 +53,7 @@ export default function DateField({ config }: Readonly<Props>): JSX.Element {
   ];
 
   const fieldId = `field-${config.key}`;
+  const dialogId = `${fieldId}-dialog`;
   const errorId = `${fieldId}-error`;
   const descId = `${fieldId}-desc`;
 
@@ -306,6 +307,7 @@ export default function DateField({ config }: Readonly<Props>): JSX.Element {
           type="button"
           id={fieldId}
           role="combobox"
+          aria-controls={dialogId}
           aria-expanded={isOpen}
           aria-haspopup="dialog"
           aria-invalid={showError}
@@ -402,6 +404,7 @@ export default function DateField({ config }: Readonly<Props>): JSX.Element {
         {/* Calendar dropdown */}
         {isOpen && !isDisabled && !config.readOnly && (
           <dialog
+            id={dialogId}
             ref={calendarRef}
             open
             aria-label={t('datetime.selectDate')}
@@ -480,7 +483,7 @@ export default function DateField({ config }: Readonly<Props>): JSX.Element {
                     <button
                       type="button"
                       onClick={() => selectDate(date)}
-                      aria-selected={isSameDay(date, selectedDate)}
+                      aria-pressed={isSameDay(date, selectedDate)}
                       aria-current={isToday(date) ? 'date' : undefined}
                       className={`
                         w-9 h-9 text-sm rounded-lg
