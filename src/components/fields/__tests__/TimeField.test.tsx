@@ -62,8 +62,8 @@ describe('TimeField', () => {
     await user.click(screen.getByRole('combobox'));
 
     // The time picker shows hour and minute columns with confirm button
-    const hours = screen.getAllByRole('option');
-    expect(hours.length).toBeGreaterThan(0);
+    const buttons = screen.getAllByRole('button');
+    expect(buttons.length).toBeGreaterThan(0);
 
     const confirmBtn = screen.getByRole('button', { name: 'Confirm' });
     expect(confirmBtn).toBeInTheDocument();
@@ -82,6 +82,14 @@ describe('TimeField', () => {
   it('disables interaction when disabled', () => {
     renderTimeField({ disabled: true });
     expect(screen.getByRole('combobox')).toHaveAttribute('tabindex', '-1');
+  });
+
+  it('does not open dropdown when readOnly', async () => {
+    const user = userEvent.setup();
+    renderTimeField({ readOnly: true });
+
+    await user.click(screen.getByRole('combobox'));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('has proper aria attributes', () => {
@@ -136,9 +144,9 @@ describe('TimeField', () => {
 
     await user.click(screen.getByRole('combobox'));
 
-    expect(screen.getByRole('option', { name: '00' })).toBeInTheDocument();
-    expect(screen.getByRole('option', { name: '15' })).toBeInTheDocument();
-    expect(screen.getByRole('option', { name: '45' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '00' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '15' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '45' })).toBeInTheDocument();
   });
 
   it('handles arrow up navigation for hour and minute columns', async () => {
@@ -180,5 +188,21 @@ describe('TimeField', () => {
 
     await user.click(combobox);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('supports space key interaction to open and confirm', async () => {
+    const user = userEvent.setup();
+    renderTimeField();
+
+    const combobox = screen.getByRole('combobox');
+    combobox.focus();
+
+    await user.keyboard(' ');
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    await user.keyboard(' ');
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
   });
 });
