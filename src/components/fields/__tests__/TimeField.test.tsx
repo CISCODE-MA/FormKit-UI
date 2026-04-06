@@ -102,4 +102,83 @@ describe('TimeField', () => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
   });
+
+  it('supports keyboard navigation and confirms selection', async () => {
+    const user = userEvent.setup();
+    renderTimeField();
+
+    const combobox = screen.getByRole('combobox');
+    combobox.focus();
+
+    await user.keyboard('{ArrowDown}'); // open
+    await user.keyboard('{ArrowRight}'); // move to minute column
+    await user.keyboard('{ArrowDown}'); // increment minute
+    await user.keyboard('{Enter}'); // confirm
+
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+  });
+
+  it('shows clear button for existing value and clears it', async () => {
+    const user = userEvent.setup();
+    renderTimeField({}, '09:15');
+
+    const clearButton = screen.getByRole('button', { name: 'Clear selection' });
+    await user.click(clearButton);
+
+    expect(screen.queryByText('9:15 AM')).not.toBeInTheDocument();
+  });
+
+  it('respects timeStep minute interval options', async () => {
+    const user = userEvent.setup();
+    renderTimeField({ timeStep: 900 }); // 15-minute interval
+
+    await user.click(screen.getByRole('combobox'));
+
+    expect(screen.getByRole('option', { name: '00' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: '15' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: '45' })).toBeInTheDocument();
+  });
+
+  it('handles arrow up navigation for hour and minute columns', async () => {
+    const user = userEvent.setup();
+    renderTimeField();
+
+    const combobox = screen.getByRole('combobox');
+    combobox.focus();
+
+    await user.keyboard('{ArrowDown}');
+    await user.keyboard('{ArrowUp}');
+    await user.keyboard('{ArrowRight}');
+    await user.keyboard('{ArrowUp}');
+    await user.keyboard('{Enter}');
+
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+  });
+
+  it('cycles focus column with Tab while open', async () => {
+    const user = userEvent.setup();
+    renderTimeField();
+
+    await user.click(screen.getByRole('combobox'));
+    await user.keyboard('{Tab}');
+    await user.keyboard('{ArrowDown}');
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+
+  it('toggles dropdown open and closed on combobox click', async () => {
+    const user = userEvent.setup();
+    renderTimeField();
+
+    const combobox = screen.getByRole('combobox');
+    await user.click(combobox);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    await user.click(combobox);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
 });

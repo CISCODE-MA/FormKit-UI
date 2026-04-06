@@ -96,4 +96,105 @@ describe('DateTimeField', () => {
     await user.click(screen.getByRole('combobox'));
     expect(screen.getByRole('button', { name: 'Today' })).toBeInTheDocument();
   });
+
+  it('lets user select date and time then confirm', async () => {
+    const user = userEvent.setup();
+    renderDateTimeField();
+
+    await user.click(screen.getByRole('combobox'));
+
+    // Pick a date cell and switch to time tab
+    const dateCells = screen.getAllByRole('gridcell');
+    const clickableDate = dateCells
+      .map((cell) => cell.querySelector('button'))
+      .find((btn): btn is HTMLButtonElement => btn instanceof HTMLButtonElement);
+    expect(clickableDate).toBeDefined();
+    if (!clickableDate) return;
+    await user.click(clickableDate);
+
+    await user.click(screen.getByRole('button', { name: /Time/i }));
+    await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+  });
+
+  it('supports month navigation controls', async () => {
+    const user = userEvent.setup();
+    renderDateTimeField();
+
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByRole('button', { name: 'Previous month' }));
+    await user.click(screen.getByRole('button', { name: 'Next month' }));
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+
+  it('shows clear button for existing value and clears it', async () => {
+    const user = userEvent.setup();
+    renderDateTimeField({}, '2026-03-15T14:30');
+
+    const clearButton = screen.getByRole('button', { name: 'Clear selection' });
+    await user.click(clearButton);
+
+    expect(screen.queryByText(/Mar 15, 2026/)).not.toBeInTheDocument();
+  });
+
+  it('keeps confirm disabled when no date is selected', async () => {
+    const user = userEvent.setup();
+    renderDateTimeField();
+
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByRole('button', { name: /Time/i }));
+
+    expect(screen.getByRole('button', { name: /Confirm/i })).toBeDisabled();
+  });
+
+  it('supports keyboard open with Enter and closes with Escape', async () => {
+    const user = userEvent.setup();
+    renderDateTimeField();
+
+    const combobox = screen.getByRole('combobox');
+    combobox.focus();
+
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    await user.keyboard('{Escape}');
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+  });
+
+  it('moves from date tab to time tab via Today button', async () => {
+    const user = userEvent.setup();
+    renderDateTimeField();
+
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByRole('button', { name: 'Today' }));
+
+    expect(screen.getByText('Hour')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Confirm/i })).not.toBeDisabled();
+  });
+
+  it('does not open dropdown when readOnly', async () => {
+    const user = userEvent.setup();
+    renderDateTimeField({ readOnly: true });
+
+    await user.click(screen.getByRole('combobox'));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('toggles dropdown open and closed on combobox click', async () => {
+    const user = userEvent.setup();
+    renderDateTimeField();
+
+    const combobox = screen.getByRole('combobox');
+    await user.click(combobox);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    await user.click(combobox);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
 });
