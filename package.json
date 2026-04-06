@@ -1,6 +1,6 @@
 {
   "name": "@ciscode/ui-form-kit",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "CISCODE",
   "description": "A set of form primitives and utilities: input components, validation helpers, error handling, and field generators",
   "license": "MIT",
