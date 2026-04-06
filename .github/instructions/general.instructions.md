@@ -18,13 +18,13 @@ This is a production-ready React component library providing reusable UI compone
 
 ### Key Characteristics
 
-| Characteristic     | Description                                                      |
-| ------------------ | ---------------------------------------------------------------- |
-| **Architecture**   | Component-based, hooks-first, composable                         |
-| **Styling**        | Headless/unstyled by default, customizable                       |
-| **TypeScript**     | Fully typed, strict mode enabled                                 |
-| **Accessibility**  | WCAG 2.1 AA compliant                                            |
-| **Testing**        | Target: 80%+ coverage                                            |
+| Characteristic    | Description                                |
+| ----------------- | ------------------------------------------ |
+| **Architecture**  | Component-based, hooks-first, composable   |
+| **Styling**       | Headless/unstyled by default, customizable |
+| **TypeScript**    | Fully typed, strict mode enabled           |
+| **Accessibility** | WCAG 2.1 AA compliant                      |
+| **Testing**       | Target: 80%+ coverage                      |
 
 ---
 
@@ -211,10 +211,10 @@ export function Component({ className }: ComponentProps) {
 
 ### Component JSDoc
 
-```typescript
+````typescript
 /**
  * Button component with multiple variants
- * 
+ *
  * @example
  * ```tsx
  * <Button variant="primary" onClick={() => console.log('Clicked')}>
@@ -222,8 +222,8 @@ export function Component({ className }: ComponentProps) {
  * </Button>
  * ```
  */
-export function Button(props: ButtonProps): JSX.Element
-```
+export function Button(props: ButtonProps): JSX.Element;
+````
 
 ### Props Interface Documentation
 
