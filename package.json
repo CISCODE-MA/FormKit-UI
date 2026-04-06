@@ -11,7 +11,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/CISCODE/FormKit-UI.git"
+    "url": "https://github.com/CISCOD-MA/FormKit-UI.git"
   },
   "files": [
     "dist",
