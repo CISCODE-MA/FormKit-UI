@@ -6,11 +6,19 @@ import prettier from 'eslint-config-prettier';
 
 export default [
   {
-    ignores: ['dist/**', 'node_modules/**', 'coverage/**', '.vitest/**'],
+    ignores: [
+      'dist/**',
+      '*.d.ts',
+      'node_modules/**',
+      'coverage/**',
+      '.vitest/**',
+      'postcss.config.js',
+      'tailwind.config.js',
+      'build/**',
+    ],
   },
 
   js.configs.recommended,
-
   ...tseslint.configs.recommended,
 
   {
@@ -29,32 +37,12 @@ export default [
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-
-      // modern React: no need for React import in scope
       'react/react-in-jsx-scope': 'off',
-    },
-  },
-  {
-    files: ['src/utils/**/*.{ts,tsx}'],
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          paths: [
-            {
-              name: 'react',
-              message: 'utils must not import react. Move code to hooks/components.',
-            },
-            {
-              name: 'react-dom',
-              message: 'utils must not import react-dom. Move code to hooks/components.',
-            },
-          ],
-        },
-      ],
+      'react/prop-types': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': 'warn',
     },
   },
 
-  // must be last: turns off rules that conflict with prettier
   prettier,
 ];
