@@ -148,10 +148,10 @@ jobs:
             -Dsonar.organization=${{ env.SONAR_ORGANIZATION }}
             -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
             -Dsonar.sources=src
-            -Dsonar.tests=test
-            -Dsonar.test.inclusions=**/*.spec.ts,**/*.test.ts
+            -Dsonar.tests=src
+            -Dsonar.test.inclusions=**/*.spec.ts,**/*.spec.tsx,**/*.test.ts,**/*.test.tsx
             -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**,**/*.d.ts
-            -Dsonar.coverage.exclusions=**/*.spec.ts,**/*.test.ts,**/index.ts
+            -Dsonar.coverage.exclusions=**/*.spec.ts,**/*.spec.tsx,**/*.test.ts,**/*.test.tsx,**/index.ts
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.typescript.tsconfigPath=tsconfig.json
             -Dsonar.qualitygate.wait=true
