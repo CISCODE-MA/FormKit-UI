@@ -174,7 +174,11 @@ export default function MultiSelectField({ config }: Readonly<Props>): JSX.Eleme
       focusPrev: () => setFocusedIndex((prev) => Math.max(prev - 1, 0)),
       focusFirst: () => setFocusedIndex(0),
       focusLast: () => setFocusedIndex(filteredOptions.length - 1),
-      selectFocused: () => toggleOption(filteredOptions[focusedIndex].value),
+      selectFocused: () => {
+        const focusedOption = filteredOptions[focusedIndex];
+        if (!focusedOption) return;
+        toggleOption(focusedOption.value);
+      },
     });
   };
 
